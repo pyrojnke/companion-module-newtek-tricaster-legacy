@@ -1,0 +1,32 @@
+{
+"id": "newtek-tricaster-legacy",
+"name": "NewTek TriCaster Legacy",
+"shortname": "TriCaster Legacy",
+"description": "Legacy NewTek TriCaster TCP 5951 state and feedback support",
+"version": "0.0.0",
+"license": "MIT",
+"repository": "git+https://github.com/pyroj/companion-module-newtek-tricaster-legacy.git",
+"bugs": "https://github.com/pyroj/companion-module-newtek-tricaster-legacy/issues",
+"maintainers": [
+{
+"name": "Community"
+}
+],
+"legacyIds": [],
+"runtime": {
+"type": "node18",
+"api": "nodejs-ipc",
+"apiVersion": "0.0.0",
+"entrypoint": "../index.js"
+},
+"manufacturer": "NewTek",
+"products": [
+"TriCaster Legacy"
+],
+"keywords": [
+"tricaster",
+"newtek",
+"legacy",
+"5951"
+]
+}
