@@ -3,6 +3,7 @@ const net = require('net')
 
 const config = require('./src/config')
 const feedbacks = require('./src/feedbacks')
+const variables = require('./src/variables')
 
 class TriCasterLegacyInstance extends InstanceBase {
 	constructor(internal) {
@@ -11,6 +12,7 @@ class TriCasterLegacyInstance extends InstanceBase {
 		Object.assign(this, {
 			...config,
 			...feedbacks,
+			...variables,
 		})
 
 		this.socket = null
@@ -25,6 +27,7 @@ class TriCasterLegacyInstance extends InstanceBase {
 		this.config = config
 
 		this.initFeedbacks()
+		this.initVariables()
 		this.initConnection()
 	}
 
@@ -172,6 +175,12 @@ class TriCasterLegacyInstance extends InstanceBase {
 
 				this.shortcutStates[attributes.name] = newValue
 
+				if (this.variableStates.includes(attributes.name)) {
+					this.setVariableValues({
+						[attributes.name]: newValue,
+					})
+				}
+
 				if (oldValue !== newValue) {
 					stateChanged = true
 
@@ -193,6 +202,7 @@ class TriCasterLegacyInstance extends InstanceBase {
 
 		if (stateChanged) {
 			this.checkFeedbacks('shortcutStateEquals')
+			this.checkFeedbacks('shortcutStatesMultiple')
 		}
 	}
 }

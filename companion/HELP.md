@@ -4,7 +4,7 @@ A Bitfocus Companion module for older NewTek TriCaster systems that use the lega
 
 > **Beta Software**
 >
-> This module is under active development. It has been developed and initially tested for a NewTek TriCaster XD860 running build 2-6-170817. Other legacy TriCaster models may expose different states or fewer features.
+> This module is under active development. It has been developed and initially tested with a NewTek TriCaster XD860 running build 2-6-170817. Other legacy TriCaster models may expose different states or fewer features.
 
 ## Why This Module Exists
 
@@ -43,24 +43,24 @@ The Companion computer must be able to communicate with the TriCaster over the n
 
 ### Enable Verbose Logging
 
-Enables logging of the raw information received from the TriCaster.
+Enables logging of state information received from the TriCaster.
 
 This is primarily intended for:
 
 - Troubleshooting
-- Discovering state names
+- Discovering state names and values
 - Development
 - Testing additional TriCaster models
 
 Verbose logging may generate a large amount of information and normally should be disabled after testing.
 
+The commonly used states exposed as Companion variables can be viewed without enabling verbose logging.
+
 ## Feedbacks
 
 ### Shortcut State Equals
 
-This is the primary feedback available in the initial beta.
-
-The feedback becomes active when a specified TriCaster shortcut state equals the specified value.
+This feedback monitors one TriCaster shortcut state.
 
 Two fields are provided:
 
@@ -90,6 +90,85 @@ If the operator changes Output 2 to another source, the TriCaster reports the st
 
 This allows a Companion button to indicate whether the TriCaster is actually in the desired state rather than merely indicating that a command was previously sent.
 
+### Shortcut States - Multiple Conditions
+
+This feedback monitors up to four TriCaster shortcut-state conditions at the same time.
+
+Choose the overall **Match Logic**:
+
+- **AND** - All configured conditions must match.
+- **OR** - Any configured condition may match.
+
+Each condition provides:
+
+**State Name**
+
+The exact shortcut state reported by the TriCaster.
+
+**Comparison**
+
+Choose:
+
+- **Equal**
+- **Not Equal**
+
+**Expected Value**
+
+The value to compare against the current TriCaster state.
+
+Conditions with a blank State Name are ignored.
+
+For example, an AND feedback could require:
+
+`main_a_row_named_input = Input4`
+
+and:
+
+`main_output2_select_named_input = program`
+
+The feedback would become active only while both conditions are true.
+
+The original `Shortcut State Equals` feedback remains available when only a single state comparison is required.
+
+## Variables
+
+Selected commonly useful `NTK_states` are exposed directly as Companion variables.
+
+The variable ID uses the actual state name reported by the TriCaster. The description shown in Companion explains what that state represents.
+
+Current variables include:
+
+| Variable ID | Description |
+| --- | --- |
+| `main_a_row_named_input` | Main program row current value |
+| `main_b_row_named_input` | Main preview row current value |
+| `main_output2_select_named_input` | Output 2 current source |
+| `main_dsk1_select_named_input` | Main DSK 1 current source |
+| `main_dsk2_select_named_input` | Main DSK 2 current source |
+| `main_fx_select_named_input` | Main FX current source |
+| `v1_a_row_named_input` | M/E1 row A current value |
+| `v1_b_row_named_input` | M/E1 row B current value |
+| `v2_a_row_named_input` | M/E2 row A current value |
+| `v2_b_row_named_input` | M/E2 row B current value |
+| `v3_a_row_named_input` | M/E3 row A current value |
+| `v3_b_row_named_input` | M/E3 row B current value |
+| `v4_a_row_named_input` | M/E4 row A current value |
+| `v4_b_row_named_input` | M/E4 row B current value |
+| `v5_a_row_named_input` | M/E5 row A current value |
+| `v5_b_row_named_input` | M/E5 row B current value |
+| `v6_a_row_named_input` | M/E6 row A current value |
+| `v6_b_row_named_input` | M/E6 row B current value |
+| `v7_a_row_named_input` | M/E7 row A current value |
+| `v7_b_row_named_input` | M/E7 row B current value |
+| `v8_a_row_named_input` | M/E8 row A current value |
+| `v8_b_row_named_input` | M/E8 row B current value |
+| `program_tally` | Sources currently contributing to Program |
+| `preview_tally` | Sources currently contributing to Preview |
+
+These variables make useful TriCaster state information available in Companion without requiring verbose logging or creating a feedback button simply to inspect a value.
+
+The exact states and values provided by other legacy TriCaster models may differ.
+
 ## Unsupported or Missing States
 
 Different legacy TriCaster models may provide different shortcut states.
@@ -100,40 +179,45 @@ The module should not assume that every supported TriCaster has the same number 
 
 If a feedback references a state that the connected TriCaster does not provide, the feedback will remain inactive.
 
+Variables corresponding to states not supplied by the connected TriCaster may remain unset.
+
 ## Connection Recovery
 
 If the connection to the TriCaster is lost, the module will attempt to reconnect automatically.
 
-After reconnecting, the module registers for `NTK_states` again so that state feedback can resume.
+After reconnecting, the module registers for `NTK_states` again so that state feedback and variables can resume updating.
 
 ## Current Beta Functionality
 
-The initial beta provides:
+The current development beta provides:
 
 - Legacy TriCaster TCP connection on port 5951
 - `NTK_states` registration
 - Initial shortcut-state reception
 - Incremental shortcut-state updates
 - Generic shortcut-state parsing
-- `Shortcut State Equals` feedback
+- Single-state `Shortcut State Equals` feedback
+- Multiple-condition shortcut-state feedback
+- AND or OR matching of multiple conditions
+- Equal or Not Equal comparison for each multiple condition
+- Companion variables for selected useful TriCaster states
 - Automatic reconnection
 - Optional verbose logging
 
+The multiple-condition feedback and Companion variables are new development-beta functionality and have not yet completed live TriCaster testing.
+
 ## Planned Development
 
-Future versions are expected to add user-friendly feedbacks and variables for commonly used TriCaster functions while retaining the generic shortcut-state system.
+Future development is expected to expand the legacy TriCaster integration while retaining the generic shortcut-state system.
 
 Potential areas include:
 
-- Main switcher A/Program row
-- Main switcher B/Preview row
-- Main and secondary output assignments
-- M/E source and configuration states
-- DSK states
+- Additional useful state variables
+- Additional state discovery and diagnostics
 - DDR/media player states
 - Recording and streaming states where supported
-- Companion variables for reported TriCaster states
-- Improved state discovery and diagnostics
+- Direct TriCaster command support through this module
+- User-friendly actions for commonly used TriCaster controls
 
 Features will be implemented so that states or capabilities missing from a particular legacy TriCaster do not prevent the module from operating.
 

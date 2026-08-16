@@ -1,3 +1,4 @@
 node_modules/
 pkg/
 *.tgz
+*.beta10-backup
