@@ -4,6 +4,7 @@ const net = require('net')
 const config = require('./src/config')
 const feedbacks = require('./src/feedbacks')
 const variables = require('./src/variables')
+const actions = require('./src/actions')
 
 class TriCasterLegacyInstance extends InstanceBase {
 	constructor(internal) {
@@ -13,6 +14,7 @@ class TriCasterLegacyInstance extends InstanceBase {
 			...config,
 			...feedbacks,
 			...variables,
+			...actions,
 		})
 
 		this.socket = null
@@ -28,6 +30,7 @@ class TriCasterLegacyInstance extends InstanceBase {
 
 		this.initFeedbacks()
 		this.initVariables()
+		this.initActions()
 		this.initConnection()
 	}
 

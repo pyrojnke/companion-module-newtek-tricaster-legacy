@@ -56,6 +56,60 @@ Verbose logging may generate a large amount of information and normally should b
 
 The commonly used states exposed as Companion variables can be viewed without enabling verbose logging.
 
+## Actions
+
+### Send Shortcut Command
+
+Version `1.0.0-beta.1.2` adds a generic action for sending legacy TriCaster shortcut commands directly over TCP port `5951`.
+
+The action provides:
+
+**Shortcut Name**
+
+Enter the TriCaster shortcut command name.
+
+Example:
+
+`main_a_row_named_input`
+
+**Value**
+
+Enter the value to send with the shortcut command.
+
+Example:
+
+`input1`
+
+This example sends:
+
+```xml
+<shortcut name='main_a_row_named_input' value='input1' />
+```
+
+Some shortcut commands do not require a value. Leave the **Value** field blank for those commands.
+
+For example:
+
+Shortcut Name:
+
+`main_auto`
+
+Value:
+
+*(blank)*
+
+This sends:
+
+```xml
+<shortcut name='main_auto' />
+```
+
+Each action execution creates a temporary TCP connection to port `5951`, sends the command, and closes that command connection. This is separate from the persistent connection used to receive `NTK_states`.
+
+The generic action intentionally allows arbitrary shortcut names and values so that additional legacy TriCaster commands can be tested without requiring a new module build.
+
+Available shortcut commands and accepted values may differ between TriCaster models and software versions. Test commands on the specific TriCaster before relying on them for production control.
+
 ## Feedbacks
 
 ### Shortcut State Equals
@@ -201,14 +255,19 @@ The current development beta provides:
 - AND or OR matching of multiple conditions
 - Equal or Not Equal comparison for each multiple condition
 - Companion variables for selected useful TriCaster states
-- Automatic reconnection
+- Generic `Send Shortcut Command` action
+- Temporary TCP port 5951 command connection separate from the persistent state connection
+- Support for shortcut commands with or without a Value
+- Automatic reconnection of the persistent state connection
 - Optional verbose logging
 
-The multiple-condition feedback and Companion variables are new development-beta functionality and have not yet completed live TriCaster testing.
+The multiple-condition feedback and Companion variables introduced in `1.0.0-beta.1.1` have not yet completed live TriCaster testing.
+
+The generic `Send Shortcut Command` action introduced in `1.0.0-beta.1.2` has also not yet completed live TriCaster testing.
 
 ## Planned Development
 
-Future development is expected to expand the legacy TriCaster integration while retaining the generic shortcut-state system.
+Future development is expected to expand the legacy TriCaster integration while retaining the generic shortcut-state and shortcut-command systems.
 
 Potential areas include:
 
@@ -216,8 +275,11 @@ Potential areas include:
 - Additional state discovery and diagnostics
 - DDR/media player states
 - Recording and streaming states where supported
-- Direct TriCaster command support through this module
+- Predefined dropdowns for verified TriCaster shortcut commands
 - User-friendly actions for commonly used TriCaster controls
+- Multi-step actions combining multiple verified shortcut commands
+
+The generic command action in `1.0.0-beta.1.2` is intended to help verify legacy shortcut commands before they are incorporated into more specialized actions.
 
 Features will be implemented so that states or capabilities missing from a particular legacy TriCaster do not prevent the module from operating.
 

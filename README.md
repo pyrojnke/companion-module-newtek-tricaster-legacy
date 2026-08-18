@@ -18,11 +18,15 @@ The initial focus is reliable **state feedback**, allowing Companion buttons to 
 
 ## Current Status
 
-Version `1.0.0-beta.1.1` is the current development beta.
+Version `1.0.0-beta.1.2` is the current development beta.
 
 Version `1.0.0-beta.1` established the initial TCP 5951 connection, `NTK_states` reception, parsing, and single-state feedback functionality.
 
-Version `1.0.0-beta.1.1` expands the feedback system and adds selected TriCaster states as Companion variables. These additions are awaiting live TriCaster testing.
+Version `1.0.0-beta.1.1` expands the feedback system and adds selected TriCaster states as Companion variables.
+
+Version `1.0.0-beta.1.2` adds a generic shortcut command action for sending legacy TriCaster shortcut commands directly over TCP port 5951.
+
+The functionality added in versions `1.0.0-beta.1.1` and `1.0.0-beta.1.2` is awaiting live TriCaster testing.
 
 Current functionality includes:
 
@@ -39,6 +43,7 @@ Current functionality includes:
 - Automatic reconnection after a lost connection
 - Re-registration for state updates after reconnecting
 - Optional verbose logging for development and troubleshooting
+- Generic `Send Shortcut Command` action using a temporary TCP port 5951 connection
 
 Additional functionality is planned.
 
@@ -98,6 +103,57 @@ The TriCaster then supplies state information using messages containing entries 
 ```
 
 The module stores received shortcut states by their `name` and updates them whenever the TriCaster reports a change.
+
+## Actions
+
+### Send Shortcut Command
+
+Version `1.0.0-beta.1.2` adds a generic action for sending legacy TriCaster shortcut commands directly over TCP port `5951`.
+
+The action provides two fields:
+
+- **Shortcut Name** - The TriCaster shortcut command name.
+- **Value** - The value to send with the shortcut command.
+
+For example:
+
+Shortcut Name:
+
+`main_a_row_named_input`
+
+Value:
+
+`input1`
+
+The module sends:
+
+```xml
+<shortcut name='main_a_row_named_input' value='input1' />
+```
+
+Some shortcut commands do not require a value. For those commands, leave the **Value** field blank.
+
+For example:
+
+Shortcut Name:
+
+`main_auto`
+
+Value:
+
+*(blank)*
+
+The module sends:
+
+```xml
+<shortcut name='main_auto' />
+```
+
+Each action execution creates a temporary TCP connection to port `5951`, sends the shortcut command, and closes that command connection. This is separate from the persistent TCP connection used by the module to receive `NTK_states`.
+
+The generic action intentionally does not restrict the available shortcut names or values. This allows additional legacy TriCaster commands to be tested without requiring a new module build.
+
+Command names, accepted values, and available functions may vary between legacy TriCaster models and software versions. The generic command action should therefore be tested with the specific TriCaster before being relied upon for production control.
 
 ## Feedbacks
 
@@ -172,6 +228,10 @@ The exact states and values exposed by other legacy TriCaster models may differ.
 
 ## Development Status
 
-The new multiple-condition feedback and Companion variables in `1.0.0-beta.1.1` have been implemented but have not yet completed live TriCaster testing.
+The multiple-condition feedback and Companion variables introduced in `1.0.0-beta.1.1` have been implemented but have not yet completed live TriCaster testing.
 
-Future development is expected to include additional state discovery and direct TriCaster command support through the module.
+The generic `Send Shortcut Command` action introduced in `1.0.0-beta.1.2` has been implemented but has not yet completed live TriCaster testing.
+
+The initial beta 1.2 command implementation intentionally provides a generic shortcut name and value interface rather than predefined command dropdowns. This allows the legacy TCP port 5951 command mechanism and additional shortcut commands to be tested before more specialized actions are added.
+
+Future development may include additional state discovery, predefined command dropdowns, and multi-step TriCaster actions based on commands verified on legacy TriCaster systems.
