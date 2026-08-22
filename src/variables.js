@@ -6,22 +6,40 @@ const VARIABLE_STATES = [
 	'main_dsk2_select_named_input',
 	'main_fx_select_named_input',
 
+	'main_dsk1_value',
+	'main_dsk2_value',
+	'main_value',
+	'main_auto',
+
 	'v1_a_row_named_input',
 	'v1_b_row_named_input',
+	'v1_dsk1_select_named_input',
 	'v2_a_row_named_input',
 	'v2_b_row_named_input',
+	'v2_dsk1_select_named_input',
 	'v3_a_row_named_input',
 	'v3_b_row_named_input',
+	'v3_dsk1_select_named_input',
 	'v4_a_row_named_input',
 	'v4_b_row_named_input',
+	'v4_dsk1_select_named_input',
 	'v5_a_row_named_input',
 	'v5_b_row_named_input',
+	'v5_dsk1_select_named_input',
 	'v6_a_row_named_input',
 	'v6_b_row_named_input',
+	'v6_dsk1_select_named_input',
 	'v7_a_row_named_input',
 	'v7_b_row_named_input',
+	'v7_dsk1_select_named_input',
 	'v8_a_row_named_input',
 	'v8_b_row_named_input',
+	'v8_dsk1_select_named_input',
+
+	'ddr_play',
+	'ddr_stop',
+	'ddr2_play',
+	'ddr2_stop',
 
 	'program_tally',
 	'preview_tally',
@@ -57,72 +75,55 @@ module.exports = {
 			variableId: 'main_fx_select_named_input',
 			name: 'Main FX current source',
 		})
-
 		variables.push({
-			variableId: 'v1_a_row_named_input',
-			name: 'M/E1 row A current value',
+			variableId: 'main_dsk1_value',
+			name: 'Main DSK 1 transition/on-air value',
 		})
 		variables.push({
-			variableId: 'v1_b_row_named_input',
-			name: 'M/E1 row B current value',
+			variableId: 'main_dsk2_value',
+			name: 'Main DSK 2 transition/on-air value',
 		})
 		variables.push({
-			variableId: 'v2_a_row_named_input',
-			name: 'M/E2 row A current value',
+			variableId: 'main_value',
+			name: 'Main transition position',
 		})
 		variables.push({
-			variableId: 'v2_b_row_named_input',
-			name: 'M/E2 row B current value',
-		})
-		variables.push({
-			variableId: 'v3_a_row_named_input',
-			name: 'M/E3 row A current value',
-		})
-		variables.push({
-			variableId: 'v3_b_row_named_input',
-			name: 'M/E3 row B current value',
-		})
-		variables.push({
-			variableId: 'v4_a_row_named_input',
-			name: 'M/E4 row A current value',
-		})
-		variables.push({
-			variableId: 'v4_b_row_named_input',
-			name: 'M/E4 row B current value',
-		})
-		variables.push({
-			variableId: 'v5_a_row_named_input',
-			name: 'M/E5 row A current value',
-		})
-		variables.push({
-			variableId: 'v5_b_row_named_input',
-			name: 'M/E5 row B current value',
-		})
-		variables.push({
-			variableId: 'v6_a_row_named_input',
-			name: 'M/E6 row A current value',
-		})
-		variables.push({
-			variableId: 'v6_b_row_named_input',
-			name: 'M/E6 row B current value',
-		})
-		variables.push({
-			variableId: 'v7_a_row_named_input',
-			name: 'M/E7 row A current value',
-		})
-		variables.push({
-			variableId: 'v7_b_row_named_input',
-			name: 'M/E7 row B current value',
-		})
-		variables.push({
-			variableId: 'v8_a_row_named_input',
-			name: 'M/E8 row A current value',
-		})
-		variables.push({
-			variableId: 'v8_b_row_named_input',
-			name: 'M/E8 row B current value',
+			variableId: 'main_auto',
+			name: 'Main AUTO transition active',
 		})
 
+		for (let me = 1; me <= 8; me++) {
+			variables.push({
+				variableId: `v${me}_a_row_named_input`,
+				name: `M/E${me} row A current value`,
+			})
+			variables.push({
+				variableId: `v${me}_b_row_named_input`,
+				name: `M/E${me} row B current value`,
+			})
+			variables.push({
+				variableId: `v${me}_dsk1_select_named_input`,
+				name: `M/E${me} DSK current source`,
+			})
+		}
+
+		variables.push({
+			variableId: 'ddr_play',
+			name: 'DDR 1 Play state',
+		})
+		variables.push({
+			variableId: 'ddr_stop',
+			name: 'DDR 1 Stop state',
+		})
+		variables.push({
+			variableId: 'ddr2_play',
+			name: 'DDR 2 Play state',
+		})
+		variables.push({
+			variableId: 'ddr2_stop',
+			name: 'DDR 2 Stop state',
+		})
+	
 		variables.push({
 			variableId: 'program_tally',
 			name: 'Sources currently contributing to Program',
