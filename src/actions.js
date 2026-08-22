@@ -30,6 +30,31 @@ const ME_CHOICES = [
 	{ id: '8', label: 'M/E 8' },
 ]
 
+const OUTPUT_CHOICES = [
+	{ id: 'program', label: 'PROGRAM' },
+	{ id: 'preview', label: 'PREVIEW' },
+	{ id: 'Input1', label: 'Input 1' },
+	{ id: 'Input2', label: 'Input 2' },
+	{ id: 'Input3', label: 'Input 3' },
+	{ id: 'Input4', label: 'Input 4' },
+	{ id: 'Input5', label: 'Input 5' },
+	{ id: 'Input6', label: 'Input 6' },
+	{ id: 'Input7', label: 'Input 7' },
+	{ id: 'Input8', label: 'Input 8' },
+	...ME_CHOICES.map((choice) => ({
+		id: `V${choice.id}`,
+		label: choice.label,
+	})),
+	{ id: 'Net', label: 'NET 1' },
+	{ id: 'Net2', label: 'NET 2' },
+	{ id: 'DDR', label: 'DDR 1' },
+	{ id: 'DDR2', label: 'DDR 2' },
+	{ id: 'Stills', label: 'STILLS' },
+	{ id: 'BFR1', label: 'FRAME BUFFER' },
+	{ id: 'Titles', label: 'TITLES' },
+	{ id: 'Black', label: 'BLACK' },
+]
+
 function escapeXmlAttribute(value) {
 	return String(value)
 		.replace(/&/g, '&amp;')
@@ -265,7 +290,7 @@ module.exports = {
 						label: 'Source',
 						id: 'source',
 						default: 'Input1',
-						choices: SOURCE_CHOICES,
+						choices: OUTPUT_CHOICES,
 					},
 				],
 				callback: async (action) => {

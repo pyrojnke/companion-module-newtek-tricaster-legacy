@@ -1,10 +1,299 @@
+const SOURCE_CHOICES = [
+	{ id: 'Input1', label: 'Input 1' },
+	{ id: 'Input2', label: 'Input 2' },
+	{ id: 'Input3', label: 'Input 3' },
+	{ id: 'Input4', label: 'Input 4' },
+	{ id: 'Input5', label: 'Input 5' },
+	{ id: 'Input6', label: 'Input 6' },
+	{ id: 'Input7', label: 'Input 7' },
+	{ id: 'Input8', label: 'Input 8' },
+	{ id: 'Net', label: 'NET 1' },
+	{ id: 'Net2', label: 'NET 2' },
+	{ id: 'DDR', label: 'DDR 1' },
+	{ id: 'DDR2', label: 'DDR 2' },
+	{ id: 'Stills', label: 'STILLS' },
+	{ id: 'BFR1', label: 'FRAME BUFFER' },
+	{ id: 'Titles', label: 'TITLES' },
+	{ id: 'Black', label: 'BLACK' },
+]
+
+const ME_CHOICES = [
+	{ id: '1', label: 'M/E 1' },
+	{ id: '2', label: 'M/E 2' },
+	{ id: '3', label: 'M/E 3' },
+	{ id: '4', label: 'M/E 4' },
+	{ id: '5', label: 'M/E 5' },
+	{ id: '6', label: 'M/E 6' },
+	{ id: '7', label: 'M/E 7' },
+	{ id: '8', label: 'M/E 8' },
+]
+
+const OUTPUT_CHOICES = [
+	{ id: 'program', label: 'PROGRAM' },
+	{ id: 'preview', label: 'PREVIEW' },
+	{ id: 'Input1', label: 'Input 1' },
+	{ id: 'Input2', label: 'Input 2' },
+	{ id: 'Input3', label: 'Input 3' },
+	{ id: 'Input4', label: 'Input 4' },
+	{ id: 'Input5', label: 'Input 5' },
+	{ id: 'Input6', label: 'Input 6' },
+	{ id: 'Input7', label: 'Input 7' },
+	{ id: 'Input8', label: 'Input 8' },
+	...ME_CHOICES.map((choice) => ({
+		id: `V${choice.id}`,
+		label: choice.label,
+	})),
+	{ id: 'Net', label: 'NET 1' },
+	{ id: 'Net2', label: 'NET 2' },
+	{ id: 'DDR', label: 'DDR 1' },
+	{ id: 'DDR2', label: 'DDR 2' },
+	{ id: 'Stills', label: 'STILLS' },
+	{ id: 'BFR1', label: 'FRAME BUFFER' },
+	{ id: 'Titles', label: 'TITLES' },
+	{ id: 'Black', label: 'BLACK' },
+]
+
 module.exports = {
 	initFeedbacks() {
 		const self = this
 
 		self.setFeedbackDefinitions({
+			programPreviewSourceSelected: {
+				name: 'Program/Preview: Source Selected',
+				description: 'Active when the selected source is currently selected on the Main Program or Preview row.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Row',
+						id: 'row',
+						choices: [
+							{ id: 'program', label: 'Program' },
+							{ id: 'preview', label: 'Preview' },
+						],
+						default: 'program',
+					},
+					{
+						type: 'dropdown',
+						label: 'Source',
+						id: 'source',
+						choices: SOURCE_CHOICES,
+						default: 'Input1',
+					},
+				],
+				callback: (feedback) => {
+					const stateName =
+						feedback.options.row === 'preview'
+							? 'main_b_row_named_input'
+							: 'main_a_row_named_input'
+
+					return String(self.shortcutStates[stateName] ?? '') === String(feedback.options.source ?? '')
+				},
+			},
+			programDskOnAir: {
+				name: 'Program DSK: On Air',
+				description: 'Active when the selected Main DSK is contributing to Program.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DSK',
+						id: 'dsk',
+						choices: [
+							{ id: '1', label: 'DSK 1' },
+							{ id: '2', label: 'DSK 2' },
+						],
+						default: '1',
+					},
+				],
+				callback: (feedback) => {
+					const stateName =
+						feedback.options.dsk === '2'
+							? 'main_dsk2_value'
+							: 'main_dsk1_value'
+
+					const value = Number(self.shortcutStates[stateName] ?? 0)
+
+					return Number.isFinite(value) && value > 0
+				},
+			},
+			meRowSourceSelected: {
+				name: 'M/E Row: Source Selected',
+				description: 'Active when the selected source is currently selected on the chosen M/E A or B row.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'M/E',
+						id: 'me',
+						choices: ME_CHOICES,
+						default: '1',
+					},
+					{
+						type: 'dropdown',
+						label: 'Row',
+						id: 'row',
+						choices: [
+							{ id: 'a', label: 'A' },
+							{ id: 'b', label: 'B' },
+						],
+						default: 'a',
+					},
+					{
+						type: 'dropdown',
+						label: 'Source',
+						id: 'source',
+						choices: SOURCE_CHOICES,
+						default: 'Input1',
+					},
+				],
+				callback: (feedback) => {
+					const me = String(feedback.options.me || '1')
+					const row = feedback.options.row === 'b' ? 'b' : 'a'
+					const stateName = `v${me}_${row}_row_named_input`
+
+					return String(self.shortcutStates[stateName] ?? '') === String(feedback.options.source ?? '')
+				},
+			},
+			meDskSourceSelected: {
+				name: 'M/E DSK: Source Selected',
+				description: 'Active when the selected source is currently selected on the chosen M/E DSK.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'M/E',
+						id: 'me',
+						choices: ME_CHOICES,
+						default: '1',
+					},
+					{
+						type: 'dropdown',
+						label: 'Source',
+						id: 'source',
+						choices: SOURCE_CHOICES,
+						default: 'Input1',
+					},
+				],
+				callback: (feedback) => {
+					const me = String(feedback.options.me || '1')
+					const stateName = `v${me}_dsk1_select_named_input`
+
+					return String(self.shortcutStates[stateName] ?? '') === String(feedback.options.source ?? '')
+				},
+			},
+			output2SourceSelected: {
+				name: 'Output 2: Source Selected',
+				description: 'Active when the selected source is currently routed to TriCaster Output 2.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Source',
+						id: 'source',
+						choices: OUTPUT_CHOICES,
+						default: 'Input1',
+					},
+				],
+				callback: (feedback) => {
+					return (
+						String(self.shortcutStates.main_output2_select_named_input ?? '') ===
+						String(feedback.options.source ?? '')
+					)
+				},
+			},
+			ddrPlaying: {
+				name: 'DDR: Playing',
+				description: 'Active when the selected DDR is currently playing.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DDR',
+						id: 'ddr',
+						choices: [
+							{ id: '1', label: 'DDR 1' },
+							{ id: '2', label: 'DDR 2' },
+						],
+						default: '1',
+					},
+				],
+				callback: (feedback) => {
+					const stateName =
+						feedback.options.ddr === '2'
+							? 'ddr2_play'
+							: 'ddr_play'
+
+					return String(self.shortcutStates[stateName] ?? '').toLowerCase() === 'true'
+				},
+			},
+			tallySourceOnProgramPreview: {
+				name: 'Tally: Source On Program/Preview',
+				description: 'Active when the selected source is contributing to Program or Preview tally.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Tally',
+						id: 'tally',
+						choices: [
+							{ id: 'program', label: 'Program' },
+							{ id: 'preview', label: 'Preview' },
+						],
+						default: 'program',
+					},
+					{
+						type: 'dropdown',
+						label: 'Source',
+						id: 'source',
+						choices: SOURCE_CHOICES,
+						default: 'Input1',
+					},
+				],
+				callback: (feedback) => {
+					const stateName =
+						feedback.options.tally === 'preview'
+							? 'preview_tally'
+							: 'program_tally'
+
+					const tallySources = String(self.shortcutStates[stateName] ?? '')
+						.split('|')
+						.map((source) => source.trim())
+						.filter((source) => source !== '')
+
+					return tallySources.includes(String(feedback.options.source ?? ''))
+				},
+			},
 			shortcutStateEquals: {
-				name: 'Shortcut State Equals',
+				name: 'Advanced: Shortcut State Equals',
 				description: 'Active when a TriCaster shortcut state equals the specified value.',
 				type: 'boolean',
 				defaultStyle: {
@@ -37,7 +326,7 @@ module.exports = {
 				},
 			},
 			shortcutStatesMultiple: {
-				name: 'Shortcut States - Multiple Conditions',
+				name: 'Advanced: Shortcut States - Multiple Conditions',
 				description: 'Active when multiple TriCaster shortcut state conditions match using AND or OR logic.',
 				type: 'boolean',
 				defaultStyle: {
