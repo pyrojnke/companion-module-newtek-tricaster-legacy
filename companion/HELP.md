@@ -4,15 +4,15 @@ A Bitfocus Companion module for older NewTek TriCaster systems that use the lega
 
 > **Beta Software**
 >
-> This module is under active development. It has been developed and initially tested with a NewTek TriCaster XD860 running build 2-6-170817. Other legacy TriCaster models may expose different states or fewer features.
+> This module is under active development. It has been developed and initially tested with a NewTek TriCaster XD860 running build 2-6-170817. Other legacy TriCaster models may expose different states, commands, source names, or fewer features.
 
 ## Why This Module Exists
 
 Older NewTek TriCaster systems use a different control and feedback interface than newer TriCaster models.
 
-The current NewTek TriCaster Companion module is designed for the newer command/API system and may not provide feedback from older systems such as the TriCaster XD860.
+The current NewTek TriCaster Companion module is designed for the newer command/API system and may not provide the required control and feedback from older systems such as the TriCaster XD860.
 
-This module is intended to provide Companion integration for those older TriCaster systems.
+This module provides Companion integration for those older TriCaster systems using the legacy TCP interface.
 
 ## Connection
 
@@ -28,6 +28,8 @@ After connecting, the module sends:
 `<register name="NTK_states"/>`
 
 The TriCaster then reports its available shortcut states and subsequent state changes.
+
+The module maintains this connection for state feedback. Control actions use separate temporary TCP connections to send commands.
 
 ## Configuration
 
@@ -58,11 +60,146 @@ The commonly used states exposed as Companion variables can be viewed without en
 
 ## Actions
 
-### Send Shortcut Command
+Beta 1.3 provides dedicated actions for commonly used TriCaster controls. The Advanced shortcut action remains available for development, troubleshooting, and commands that do not yet have dedicated actions.
 
-Version `1.0.0-beta.1.2` adds a generic action for sending legacy TriCaster shortcut commands directly over TCP port `5951`.
+### Program/Preview: Set Source
 
-The action provides:
+Sets the source on the Main Program or Preview row.
+
+Choose:
+
+**Destination**
+
+- Program
+- Preview
+
+**Source**
+
+Available choices currently include:
+
+- Input 1-8
+- NET 1
+- NET 2
+- DDR 1
+- DDR 2
+- STILLS
+- FRAME BUFFER
+- TITLES
+- BLACK
+
+The available source names are based on values verified during development with the XD860.
+
+### Program: AUTO
+
+Performs the Main AUTO transition.
+
+This sends the legacy `main_auto` shortcut command.
+
+### Program: CUT
+
+Performs the Main CUT transition.
+
+### Program DSK: Set Source
+
+Sets the source for Main DSK 1 or Main DSK 2.
+
+Choose:
+
+**DSK**
+
+- DSK 1
+- DSK 2
+
+**Source**
+
+Choose the desired source from the available source list.
+
+### Program DSK: AUTO
+
+Performs an AUTO transition on the selected Main DSK.
+
+Choose:
+
+- DSK 1
+- DSK 2
+
+### Program DSK: TAKE
+
+Performs a TAKE on the selected Main DSK.
+
+Choose:
+
+- DSK 1
+- DSK 2
+
+### M/E Row: Set Source
+
+Sets the source on an M/E A or B row.
+
+Choose:
+
+**M/E**
+
+- M/E 1-8
+
+**Row**
+
+- A
+- B
+
+**Source**
+
+Choose the desired source.
+
+M/E C and D row behavior has not yet been sufficiently verified and is therefore not exposed through this dedicated action.
+
+### M/E DSK: Set Source
+
+Sets the source for the selected M/E DSK.
+
+Choose:
+
+**M/E**
+
+- M/E 1-8
+
+**Source**
+
+Choose the desired source.
+
+### M/E: AUTO
+
+Performs an AUTO transition on the selected M/E.
+
+Choose M/E 1-8.
+
+### M/E: TAKE
+
+Performs a TAKE transition on the selected M/E.
+
+Choose M/E 1-8.
+
+### Main FX: Set Source
+
+Sets the source used by Main FX.
+
+Choose the desired source from the available source list.
+
+### Output 2: Set Source
+
+Sets the source routed to TriCaster Output 2.
+
+Output 2 uses a separate choice list from normal source-selection actions because Output 2 can also route M/E outputs.
+
+Available choices include direct sources and M/E 1-8 where supported by the TriCaster.
+
+### Advanced: Send Shortcut Command
+
+Provides direct access to the legacy TriCaster shortcut command interface.
+
+Use the dedicated actions above when an appropriate dedicated action exists.
+
+The Advanced action provides:
 
 **Shortcut Name**
 
@@ -78,12 +215,12 @@ Enter the value to send with the shortcut command.
 
 Example:
 
-`input1`
+`Input1`
 
 This example sends:
 
 ```xml
-<shortcut name='main_a_row_named_input' value='input1' />
+<shortcut name='main_a_row_named_input' value='Input1' />
 ```
 
 Some shortcut commands do not require a value. Leave the **Value** field blank for those commands.
@@ -104,27 +241,142 @@ This sends:
 <shortcut name='main_auto' />
 ```
 
-Each action execution creates a temporary TCP connection to port `5951`, sends the command, and closes that command connection. This is separate from the persistent connection used to receive `NTK_states`.
+The Advanced action intentionally allows arbitrary shortcut names and values so that additional legacy TriCaster commands can be investigated without requiring a new module build.
 
-The generic action intentionally allows arbitrary shortcut names and values so that additional legacy TriCaster commands can be tested without requiring a new module build.
-
-Available shortcut commands and accepted values may differ between TriCaster models and software versions. Test commands on the specific TriCaster before relying on them for production control.
+Available shortcut commands and accepted values may differ between TriCaster models and software versions.
 
 ## Feedbacks
 
-### Shortcut State Equals
+Beta 1.3 provides dedicated boolean feedbacks for commonly used TriCaster states.
 
-This feedback monitors one TriCaster shortcut state.
+Companion determines the button styling applied when a boolean feedback is active.
 
-Two fields are provided:
+### Program/Preview: Source Selected
+
+Indicates whether a selected source is currently selected on the Main Program or Preview row.
+
+Choose:
+
+**Row**
+
+- Program
+- Preview
+
+**Source**
+
+Choose the source to monitor.
+
+The feedback is active while that source exactly matches the source reported by the selected row.
+
+### Program DSK: On Air
+
+Indicates whether Main DSK 1 or Main DSK 2 is contributing to Program.
+
+Choose:
+
+- DSK 1
+- DSK 2
+
+The feedback becomes active whenever the selected DSK's reported transition/on-air value is greater than zero.
+
+This means the feedback activates as the DSK begins transitioning on and remains active while the DSK transitions off until its contribution reaches zero.
+
+### M/E Row: Source Selected
+
+Indicates whether a selected source is currently selected on an M/E A or B row.
+
+Choose:
+
+**M/E**
+
+- M/E 1-8
+
+**Row**
+
+- A
+- B
+
+**Source**
+
+Choose the source to monitor.
+
+The feedback becomes active when the selected source exactly matches the source reported by that M/E row.
+
+### M/E DSK: Source Selected
+
+Indicates whether a selected source is currently selected on an M/E DSK.
+
+Choose:
+
+**M/E**
+
+- M/E 1-8
+
+**Source**
+
+Choose the source to monitor.
+
+The feedback becomes active when the selected source exactly matches the source reported by that M/E DSK.
+
+### Output 2: Source Selected
+
+Indicates whether a selected source is currently routed to TriCaster Output 2.
+
+Choose the Output 2 source to monitor.
+
+The feedback becomes active when the selected source exactly matches the source reported by Output 2.
+
+The available choices correspond to the choices provided by the dedicated **Output 2: Set Source** action, including M/E 1-8 where supported.
+
+### DDR: Playing
+
+Indicates whether DDR 1 or DDR 2 is currently playing.
+
+Choose:
+
+- DDR 1
+- DDR 2
+
+The feedback becomes active while the selected DDR reports its Play state as true.
+
+### Tally: Source On Program/Preview
+
+Indicates whether a selected source is contributing to Program or Preview according to the TriCaster tally state.
+
+Choose:
+
+**Tally**
+
+- Program
+- Preview
+
+**Source**
+
+Choose the source to monitor.
+
+A legacy TriCaster can report multiple sources simultaneously in a pipe-delimited tally value.
+
+For example:
+
+`Input1|Net|BFR5|V5`
+
+The module separates the reported value into individual sources and performs an exact match. This allows a feedback for `Net`, for example, to become active when `Net` appears anywhere in the Program or Preview tally list.
+
+### Advanced: Shortcut State Equals
+
+Monitors any individual shortcut state reported by the TriCaster.
+
+Use a dedicated feedback when one is available for the function you need.
+
+The Advanced feedback provides:
 
 **State Name**
 
-The exact shortcut state reported by the TriCaster.
+Enter the exact shortcut-state name reported by the TriCaster.
 
 **Expected Value**
 
-The value that should cause the feedback to become active.
+Enter the value that should cause the feedback to become active.
 
 For example:
 
@@ -136,22 +388,20 @@ Expected Value:
 
 `program`
 
-The feedback will be active while the TriCaster reports:
+The feedback becomes active while the TriCaster reports:
 
 `main_output2_select_named_input = program`
 
-If the operator changes Output 2 to another source, the TriCaster reports the state change and the feedback becomes inactive.
+This Advanced feedback is useful for development, troubleshooting, and states that do not yet have dedicated feedbacks.
 
-This allows a Companion button to indicate whether the TriCaster is actually in the desired state rather than merely indicating that a command was previously sent.
+### Advanced: Shortcut States - Multiple Conditions
 
-### Shortcut States - Multiple Conditions
-
-This feedback monitors up to four TriCaster shortcut-state conditions at the same time.
+Monitors up to four TriCaster shortcut-state conditions simultaneously.
 
 Choose the overall **Match Logic**:
 
-- **AND** - All configured conditions must match.
-- **OR** - Any configured condition may match.
+- **AND** - All configured conditions must match
+- **OR** - Any configured condition may match
 
 Each condition provides:
 
@@ -163,8 +413,8 @@ The exact shortcut state reported by the TriCaster.
 
 Choose:
 
-- **Equal**
-- **Not Equal**
+- Equal
+- Not Equal
 
 **Expected Value**
 
@@ -180,9 +430,7 @@ and:
 
 `main_output2_select_named_input = program`
 
-The feedback would become active only while both conditions are true.
-
-The original `Shortcut State Equals` feedback remains available when only a single state comparison is required.
+The feedback becomes active only while both conditions are true.
 
 ## Variables
 
@@ -200,22 +448,38 @@ Current variables include:
 | `main_dsk1_select_named_input` | Main DSK 1 current source |
 | `main_dsk2_select_named_input` | Main DSK 2 current source |
 | `main_fx_select_named_input` | Main FX current source |
+| `main_dsk1_value` | Main DSK 1 transition/on-air value |
+| `main_dsk2_value` | Main DSK 2 transition/on-air value |
+| `main_value` | Main transition position |
+| `main_auto` | Main AUTO transition state |
 | `v1_a_row_named_input` | M/E1 row A current value |
 | `v1_b_row_named_input` | M/E1 row B current value |
+| `v1_dsk1_select_named_input` | M/E1 DSK current source |
 | `v2_a_row_named_input` | M/E2 row A current value |
 | `v2_b_row_named_input` | M/E2 row B current value |
+| `v2_dsk1_select_named_input` | M/E2 DSK current source |
 | `v3_a_row_named_input` | M/E3 row A current value |
 | `v3_b_row_named_input` | M/E3 row B current value |
+| `v3_dsk1_select_named_input` | M/E3 DSK current source |
 | `v4_a_row_named_input` | M/E4 row A current value |
 | `v4_b_row_named_input` | M/E4 row B current value |
+| `v4_dsk1_select_named_input` | M/E4 DSK current source |
 | `v5_a_row_named_input` | M/E5 row A current value |
 | `v5_b_row_named_input` | M/E5 row B current value |
+| `v5_dsk1_select_named_input` | M/E5 DSK current source |
 | `v6_a_row_named_input` | M/E6 row A current value |
 | `v6_b_row_named_input` | M/E6 row B current value |
+| `v6_dsk1_select_named_input` | M/E6 DSK current source |
 | `v7_a_row_named_input` | M/E7 row A current value |
 | `v7_b_row_named_input` | M/E7 row B current value |
+| `v7_dsk1_select_named_input` | M/E7 DSK current source |
 | `v8_a_row_named_input` | M/E8 row A current value |
 | `v8_b_row_named_input` | M/E8 row B current value |
+| `v8_dsk1_select_named_input` | M/E8 DSK current source |
+| `ddr_play` | DDR 1 Play state |
+| `ddr_stop` | DDR 1 Stop state |
+| `ddr2_play` | DDR 2 Play state |
+| `ddr2_stop` | DDR 2 Stop state |
 | `program_tally` | Sources currently contributing to Program |
 | `preview_tally` | Sources currently contributing to Preview |
 
@@ -225,63 +489,74 @@ The exact states and values provided by other legacy TriCaster models may differ
 
 ## Unsupported or Missing States
 
-Different legacy TriCaster models may provide different shortcut states.
+Different legacy TriCaster models may provide different shortcut states and commands.
 
-A state available on an XD860 may not exist on a smaller or older TriCaster.
+A state or command available on an XD860 may not exist on a smaller, older, or differently configured TriCaster.
 
 The module should not assume that every supported TriCaster has the same number of inputs, M/Es, outputs, media players, or other resources.
 
-If a feedback references a state that the connected TriCaster does not provide, the feedback will remain inactive.
+If a feedback references a state that the connected TriCaster does not provide, the feedback remains inactive.
 
 Variables corresponding to states not supplied by the connected TriCaster may remain unset.
 
 ## Connection Recovery
 
-If the connection to the TriCaster is lost, the module will attempt to reconnect automatically.
+If the persistent state connection to the TriCaster is lost, the module attempts to reconnect automatically.
 
 After reconnecting, the module registers for `NTK_states` again so that state feedback and variables can resume updating.
 
 ## Current Beta Functionality
 
-The current development beta provides:
+Version `1.0.0-beta.1.3` provides:
 
 - Legacy TriCaster TCP connection on port 5951
 - `NTK_states` registration
 - Initial shortcut-state reception
 - Incremental shortcut-state updates
 - Generic shortcut-state parsing
-- Single-state `Shortcut State Equals` feedback
-- Multiple-condition shortcut-state feedback
-- AND or OR matching of multiple conditions
-- Equal or Not Equal comparison for each multiple condition
-- Companion variables for selected useful TriCaster states
-- Generic `Send Shortcut Command` action
-- Temporary TCP port 5951 command connection separate from the persistent state connection
-- Support for shortcut commands with or without a Value
+- Dedicated Program/Preview source control
+- Dedicated Main Program AUTO and CUT control
+- Dedicated Main DSK source and transition controls
+- Dedicated M/E A/B row source control
+- Dedicated M/E DSK source control
+- Dedicated M/E transition controls
+- Main FX source control
+- Output 2 source control including M/E routing choices
+- Dedicated Program/Preview source feedback
+- Dedicated Main DSK on-air feedback
+- Dedicated M/E row and DSK source feedback
+- Dedicated Output 2 source feedback
+- DDR playing feedback
+- Program/Preview tally feedback with multiple-source parsing
+- Expanded Companion variables for useful TriCaster states
+- Advanced single-state feedback
+- Advanced multiple-condition feedback
+- Advanced direct shortcut-command action
 - Automatic reconnection of the persistent state connection
 - Optional verbose logging
 
-The multiple-condition feedback and Companion variables introduced in `1.0.0-beta.1.1` have not yet completed live TriCaster testing.
+The Beta 1.3 implementation has passed development syntax and Companion module build checks but has not yet completed live TriCaster testing.
 
-The generic `Send Shortcut Command` action introduced in `1.0.0-beta.1.2` has also not yet completed live TriCaster testing.
+## Known Limitations and Future Development
 
-## Planned Development
+Potential future development includes:
 
-Future development is expected to expand the legacy TriCaster integration while retaining the generic shortcut-state and shortcut-command systems.
-
-Potential areas include:
-
-- Additional useful state variables
-- Additional state discovery and diagnostics
-- DDR/media player states
+- Additional DDR/media-player control
+- DDR Next/Previous and additional playback functions
+- Forced-state behavior for DDR Loop, Single, and Autoplay controls
+- Audio control
+- Graphics and media selection
+- Loading media into DDRs
+- Additional source-choice discovery
+- M/E C and D row behavior
+- Additional M/E and FX behavior
+- Program transition delegation
 - Recording and streaming states where supported
-- Predefined dropdowns for verified TriCaster shortcut commands
-- User-friendly actions for commonly used TriCaster controls
-- Multi-step actions combining multiple verified shortcut commands
+- Additional legacy TriCaster model compatibility
+- Reconnection or command error-handling improvements if testing shows they are needed
+- Additional dedicated actions and feedbacks based on verified legacy commands
 
-The generic command action in `1.0.0-beta.1.2` is intended to help verify legacy shortcut commands before they are incorporated into more specialized actions.
-
-Features will be implemented so that states or capabilities missing from a particular legacy TriCaster do not prevent the module from operating.
+Features should be added based on behavior verified on legacy TriCaster hardware rather than assuming that commands or states used by newer TriCaster systems behave identically.
 
 ## Tested Hardware
 
@@ -306,7 +581,9 @@ When reporting compatibility or a problem, please include:
 - TriCaster model
 - TriCaster software/build version
 - Companion version
+- Module version
 - Whether the module connects successfully
+- Action or feedback being tested
 - Relevant verbose log output
 - Description of the state or function being tested
 
