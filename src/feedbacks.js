@@ -202,6 +202,31 @@ module.exports = {
 					return normalizeSource(self.shortcutStates[stateName]) === normalizeSource(feedback.options.source)
 				},
 			},
+			meDskOnAir: {
+				name: 'M/E DSK: On Air',
+				description: 'Active when the DSK on the selected M/E is contributing.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'M/E',
+						id: 'me',
+						choices: ME_CHOICES,
+						default: '1',
+					},
+				],
+				callback: (feedback) => {
+					const me = String(feedback.options.me || '1')
+					const stateName = `v${me}_dsk1_value`
+					const value = Number(self.shortcutStates[stateName] ?? 0)
+
+					return Number.isFinite(value) && value > 0
+				},
+			},
 			output2SourceSelected: {
 				name: 'Output 2: Source Selected',
 				description: 'Active when the selected source is currently routed to TriCaster Output 2.',

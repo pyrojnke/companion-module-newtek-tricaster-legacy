@@ -14,27 +14,35 @@ const VARIABLE_STATES = [
 	'v1_a_row_named_input',
 	'v1_b_row_named_input',
 	'v1_dsk1_select_named_input',
+	'v1_dsk1_value',
 	'v2_a_row_named_input',
 	'v2_b_row_named_input',
 	'v2_dsk1_select_named_input',
+	'v2_dsk1_value',
 	'v3_a_row_named_input',
 	'v3_b_row_named_input',
 	'v3_dsk1_select_named_input',
+	'v3_dsk1_value',
 	'v4_a_row_named_input',
 	'v4_b_row_named_input',
 	'v4_dsk1_select_named_input',
+	'v4_dsk1_value',
 	'v5_a_row_named_input',
 	'v5_b_row_named_input',
 	'v5_dsk1_select_named_input',
+	'v5_dsk1_value',
 	'v6_a_row_named_input',
 	'v6_b_row_named_input',
 	'v6_dsk1_select_named_input',
+	'v6_dsk1_value',
 	'v7_a_row_named_input',
 	'v7_b_row_named_input',
 	'v7_dsk1_select_named_input',
+	'v7_dsk1_value',
 	'v8_a_row_named_input',
 	'v8_b_row_named_input',
 	'v8_dsk1_select_named_input',
+	'v8_dsk1_value',
 
 	'ddr_play',
 	'ddr_stop',
@@ -104,6 +112,10 @@ module.exports = {
 			variables.push({
 				variableId: `v${me}_dsk1_select_named_input`,
 				name: `M/E${me} DSK current source`,
+			})
+			variables.push({
+				variableId: `v${me}_dsk1_value`,
+				name: `M/E${me} DSK transition/on-air value`,
 			})
 		}
 

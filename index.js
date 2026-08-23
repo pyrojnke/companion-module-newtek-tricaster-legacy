@@ -209,6 +209,7 @@ class TriCasterLegacyInstance extends InstanceBase {
 				'programDskOnAir',
 				'meRowSourceSelected',
 				'meDskSourceSelected',
+				'meDskOnAir',
 				'output2SourceSelected',
 				'ddrPlaying',
 				'tallySourceOnProgramPreview',
