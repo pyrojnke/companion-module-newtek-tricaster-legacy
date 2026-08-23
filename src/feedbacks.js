@@ -53,6 +53,10 @@ const OUTPUT_CHOICES = [
 	{ id: 'Black', label: 'BLACK' },
 ]
 
+function normalizeSource(value) {
+	return String(value ?? '').trim().toLowerCase()
+}
+
 module.exports = {
 	initFeedbacks() {
 		const self = this
@@ -91,7 +95,7 @@ module.exports = {
 							? 'main_b_row_named_input'
 							: 'main_a_row_named_input'
 
-					return String(self.shortcutStates[stateName] ?? '') === String(feedback.options.source ?? '')
+					return normalizeSource(self.shortcutStates[stateName]) === normalizeSource(feedback.options.source)
 				},
 			},
 			programDskOnAir: {
@@ -164,7 +168,7 @@ module.exports = {
 					const row = feedback.options.row === 'b' ? 'b' : 'a'
 					const stateName = `v${me}_${row}_row_named_input`
 
-					return String(self.shortcutStates[stateName] ?? '') === String(feedback.options.source ?? '')
+					return normalizeSource(self.shortcutStates[stateName]) === normalizeSource(feedback.options.source)
 				},
 			},
 			meDskSourceSelected: {
@@ -195,7 +199,7 @@ module.exports = {
 					const me = String(feedback.options.me || '1')
 					const stateName = `v${me}_dsk1_select_named_input`
 
-					return String(self.shortcutStates[stateName] ?? '') === String(feedback.options.source ?? '')
+					return normalizeSource(self.shortcutStates[stateName]) === normalizeSource(feedback.options.source)
 				},
 			},
 			output2SourceSelected: {
@@ -217,8 +221,8 @@ module.exports = {
 				],
 				callback: (feedback) => {
 					return (
-						String(self.shortcutStates.main_output2_select_named_input ?? '') ===
-						String(feedback.options.source ?? '')
+						normalizeSource(self.shortcutStates.main_output2_select_named_input) ===
+						normalizeSource(feedback.options.source)
 					)
 				},
 			},
@@ -286,10 +290,10 @@ module.exports = {
 
 					const tallySources = String(self.shortcutStates[stateName] ?? '')
 						.split('|')
-						.map((source) => source.trim())
+						.map((source) => normalizeSource(source))
 						.filter((source) => source !== '')
 
-					return tallySources.includes(String(feedback.options.source ?? ''))
+					return tallySources.includes(normalizeSource(feedback.options.source))
 				},
 			},
 			shortcutStateEquals: {

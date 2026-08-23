@@ -204,8 +204,17 @@ class TriCasterLegacyInstance extends InstanceBase {
 		}
 
 		if (stateChanged) {
-			this.checkFeedbacks('shortcutStateEquals')
-			this.checkFeedbacks('shortcutStatesMultiple')
+			this.checkFeedbacks(
+				'programPreviewSourceSelected',
+				'programDskOnAir',
+				'meRowSourceSelected',
+				'meDskSourceSelected',
+				'output2SourceSelected',
+				'ddrPlaying',
+				'tallySourceOnProgramPreview',
+				'shortcutStateEquals',
+				'shortcutStatesMultiple'
+			)
 		}
 	}
 }
