@@ -1,59 +1,12 @@
 const net = require('net')
 
-const SOURCE_CHOICES = [
-	{ id: 'Input1', label: 'Input 1' },
-	{ id: 'Input2', label: 'Input 2' },
-	{ id: 'Input3', label: 'Input 3' },
-	{ id: 'Input4', label: 'Input 4' },
-	{ id: 'Input5', label: 'Input 5' },
-	{ id: 'Input6', label: 'Input 6' },
-	{ id: 'Input7', label: 'Input 7' },
-	{ id: 'Input8', label: 'Input 8' },
-	{ id: 'Net', label: 'NET 1' },
-	{ id: 'Net2', label: 'NET 2' },
-	{ id: 'DDR', label: 'DDR 1' },
-	{ id: 'DDR2', label: 'DDR 2' },
-	{ id: 'Stills', label: 'STILLS' },
-	{ id: 'BFR1', label: 'FRAME BUFFER' },
-	{ id: 'Titles', label: 'TITLES' },
-	{ id: 'Black', label: 'BLACK' },
-]
-
-const ME_CHOICES = [
-	{ id: '1', label: 'M/E 1' },
-	{ id: '2', label: 'M/E 2' },
-	{ id: '3', label: 'M/E 3' },
-	{ id: '4', label: 'M/E 4' },
-	{ id: '5', label: 'M/E 5' },
-	{ id: '6', label: 'M/E 6' },
-	{ id: '7', label: 'M/E 7' },
-	{ id: '8', label: 'M/E 8' },
-]
-
-const OUTPUT_CHOICES = [
-	{ id: 'program', label: 'PROGRAM' },
-	{ id: 'preview', label: 'PREVIEW' },
-	{ id: 'Input1', label: 'Input 1' },
-	{ id: 'Input2', label: 'Input 2' },
-	{ id: 'Input3', label: 'Input 3' },
-	{ id: 'Input4', label: 'Input 4' },
-	{ id: 'Input5', label: 'Input 5' },
-	{ id: 'Input6', label: 'Input 6' },
-	{ id: 'Input7', label: 'Input 7' },
-	{ id: 'Input8', label: 'Input 8' },
-	...ME_CHOICES.map((choice) => ({
-		id: `V${choice.id}`,
-		label: choice.label,
-	})),
-	{ id: 'Net', label: 'NET 1' },
-	{ id: 'Net2', label: 'NET 2' },
-	{ id: 'DDR', label: 'DDR 1' },
-	{ id: 'DDR2', label: 'DDR 2' },
-	{ id: 'Stills', label: 'STILLS' },
-	{ id: 'BFR1', label: 'FRAME BUFFER' },
-	{ id: 'Titles', label: 'TITLES' },
-	{ id: 'Black', label: 'BLACK' },
-]
+const {
+	ME_CHOICES,
+	ME_SOURCE_CHOICES,
+	PROGRAM_SOURCE_CHOICES,
+	DSK_SOURCE_CHOICES,
+	OUTPUT_CHOICES,
+} = require('./choices')
 
 function escapeXmlAttribute(value) {
 	return String(value)
@@ -122,7 +75,7 @@ module.exports = {
 						label: 'Source',
 						id: 'source',
 						default: 'Input1',
-						choices: SOURCE_CHOICES,
+						choices: PROGRAM_SOURCE_CHOICES,
 					},
 				],
 				callback: async (action) => {
@@ -153,6 +106,35 @@ module.exports = {
 					const shortcutName = action.options.transition === 'cut' ? 'main_take' : 'main_auto'
 
 					self.sendShortcutCommand(shortcutName, '')
+				},
+			},
+			setProgramDskSource: {
+				name: 'Program DSK: Set Source',
+				description: 'Set the source of Main DSK 1 or Main DSK 2.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DSK',
+						id: 'dsk',
+						default: 'dsk1',
+						choices: [
+							{ id: 'dsk1', label: 'DSK 1' },
+							{ id: 'dsk2', label: 'DSK 2' },
+						],
+					},
+					{
+						type: 'dropdown',
+						label: 'Source',
+						id: 'source',
+						default: 'Input1',
+						choices: DSK_SOURCE_CHOICES,
+					},
+				],
+				callback: async (action) => {
+					const dsk = action.options.dsk === 'dsk2' ? 'dsk2' : 'dsk1'
+					const shortcutName = `main_${dsk}_select_named_input`
+
+					self.sendShortcutCommand(shortcutName, action.options.source)
 				},
 			},
 			programDskTransition: {
@@ -214,7 +196,7 @@ module.exports = {
 						label: 'Source',
 						id: 'source',
 						default: 'Input1',
-						choices: SOURCE_CHOICES,
+						choices: ME_SOURCE_CHOICES,
 					},
 				],
 				callback: async (action) => {
@@ -271,7 +253,7 @@ module.exports = {
 						label: 'Source',
 						id: 'source',
 						default: 'Input1',
-						choices: SOURCE_CHOICES,
+						choices: DSK_SOURCE_CHOICES,
 					},
 				],
 				callback: async (action) => {

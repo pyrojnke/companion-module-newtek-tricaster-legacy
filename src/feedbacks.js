@@ -1,57 +1,11 @@
-const SOURCE_CHOICES = [
-	{ id: 'Input1', label: 'Input 1' },
-	{ id: 'Input2', label: 'Input 2' },
-	{ id: 'Input3', label: 'Input 3' },
-	{ id: 'Input4', label: 'Input 4' },
-	{ id: 'Input5', label: 'Input 5' },
-	{ id: 'Input6', label: 'Input 6' },
-	{ id: 'Input7', label: 'Input 7' },
-	{ id: 'Input8', label: 'Input 8' },
-	{ id: 'Net', label: 'NET 1' },
-	{ id: 'Net2', label: 'NET 2' },
-	{ id: 'DDR', label: 'DDR 1' },
-	{ id: 'DDR2', label: 'DDR 2' },
-	{ id: 'Stills', label: 'STILLS' },
-	{ id: 'BFR1', label: 'FRAME BUFFER' },
-	{ id: 'Titles', label: 'TITLES' },
-	{ id: 'Black', label: 'BLACK' },
-]
-
-const ME_CHOICES = [
-	{ id: '1', label: 'M/E 1' },
-	{ id: '2', label: 'M/E 2' },
-	{ id: '3', label: 'M/E 3' },
-	{ id: '4', label: 'M/E 4' },
-	{ id: '5', label: 'M/E 5' },
-	{ id: '6', label: 'M/E 6' },
-	{ id: '7', label: 'M/E 7' },
-	{ id: '8', label: 'M/E 8' },
-]
-
-const OUTPUT_CHOICES = [
-	{ id: 'program', label: 'PROGRAM' },
-	{ id: 'preview', label: 'PREVIEW' },
-	{ id: 'Input1', label: 'Input 1' },
-	{ id: 'Input2', label: 'Input 2' },
-	{ id: 'Input3', label: 'Input 3' },
-	{ id: 'Input4', label: 'Input 4' },
-	{ id: 'Input5', label: 'Input 5' },
-	{ id: 'Input6', label: 'Input 6' },
-	{ id: 'Input7', label: 'Input 7' },
-	{ id: 'Input8', label: 'Input 8' },
-	...ME_CHOICES.map((choice) => ({
-		id: `V${choice.id}`,
-		label: choice.label,
-	})),
-	{ id: 'Net', label: 'NET 1' },
-	{ id: 'Net2', label: 'NET 2' },
-	{ id: 'DDR', label: 'DDR 1' },
-	{ id: 'DDR2', label: 'DDR 2' },
-	{ id: 'Stills', label: 'STILLS' },
-	{ id: 'BFR1', label: 'FRAME BUFFER' },
-	{ id: 'Titles', label: 'TITLES' },
-	{ id: 'Black', label: 'BLACK' },
-]
+const {
+	ME_CHOICES,
+	ME_SOURCE_CHOICES,
+	PROGRAM_SOURCE_CHOICES,
+	DSK_SOURCE_CHOICES,
+	OUTPUT_CHOICES,
+	TALLY_SOURCE_CHOICES,
+} = require('./choices')
 
 function normalizeSource(value) {
 	return String(value ?? '').trim().toLowerCase()
@@ -85,7 +39,7 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Source',
 						id: 'source',
-						choices: SOURCE_CHOICES,
+						choices: PROGRAM_SOURCE_CHOICES,
 						default: 'Input1',
 					},
 				],
@@ -129,6 +83,45 @@ module.exports = {
 					return Number.isFinite(value) && value > 0
 				},
 			},
+			programDskSourceSelected: {
+				name: 'Program DSK: Source Selected',
+				description: 'Active when the selected source is currently selected on Main DSK 1 or Main DSK 2.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DSK',
+						id: 'dsk',
+						choices: [
+							{ id: '1', label: 'DSK 1' },
+							{ id: '2', label: 'DSK 2' },
+						],
+						default: '1',
+					},
+					{
+						type: 'dropdown',
+						label: 'Source',
+						id: 'source',
+						choices: DSK_SOURCE_CHOICES,
+						default: 'Input1',
+					},
+				],
+				callback: (feedback) => {
+					const stateName =
+						feedback.options.dsk === '2'
+							? 'main_dsk2_select_named_input'
+							: 'main_dsk1_select_named_input'
+
+					return (
+						normalizeSource(self.shortcutStates[stateName]) ===
+						normalizeSource(feedback.options.source)
+					)
+				},
+			},
 			meRowSourceSelected: {
 				name: 'M/E Row: Source Selected',
 				description: 'Active when the selected source is currently selected on the chosen M/E A or B row.',
@@ -159,7 +152,7 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Source',
 						id: 'source',
-						choices: SOURCE_CHOICES,
+						choices: ME_SOURCE_CHOICES,
 						default: 'Input1',
 					},
 				],
@@ -191,7 +184,7 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Source',
 						id: 'source',
-						choices: SOURCE_CHOICES,
+						choices: DSK_SOURCE_CHOICES,
 						default: 'Input1',
 					},
 				],
@@ -303,7 +296,7 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Source',
 						id: 'source',
-						choices: SOURCE_CHOICES,
+						choices: TALLY_SOURCE_CHOICES,
 						default: 'Input1',
 					},
 				],

@@ -207,6 +207,7 @@ class TriCasterLegacyInstance extends InstanceBase {
 			this.checkFeedbacks(
 				'programPreviewSourceSelected',
 				'programDskOnAir',
+				'programDskSourceSelected',
 				'meRowSourceSelected',
 				'meDskSourceSelected',
 				'meDskOnAir',
