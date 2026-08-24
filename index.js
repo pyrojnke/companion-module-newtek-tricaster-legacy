@@ -205,6 +205,7 @@ class TriCasterLegacyInstance extends InstanceBase {
 
 		if (stateChanged) {
 			this.checkFeedbacks(
+				'liveMatteEnabled',
 				'programPreviewSourceSelected',
 				'programDskOnAir',
 				'programDskSourceSelected',

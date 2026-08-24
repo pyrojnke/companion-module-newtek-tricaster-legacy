@@ -1,4 +1,5 @@
 const {
+	BASE_SOURCE_CHOICES,
 	ME_CHOICES,
 	ME_SOURCE_CHOICES,
 	PROGRAM_SOURCE_CHOICES,
@@ -16,6 +17,31 @@ module.exports = {
 		const self = this
 
 		self.setFeedbackDefinitions({
+			liveMatteEnabled: {
+				name: 'LiveMatte: Status',
+				description: 'Active when LiveMatte is enabled for the selected source.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0x00ff00,
+					color: 0x000000,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Source',
+						id: 'source',
+						choices: BASE_SOURCE_CHOICES,
+						default: 'Net',
+					},
+				],
+				callback: (feedback) => {
+					const source = String(feedback.options.source || 'Net').toLowerCase()
+					const stateName = `${source}_toggle_livematte`
+					const value = String(self.shortcutStates[stateName] ?? '').toLowerCase()
+
+					return value === 'true'
+				},
+			},
 			programPreviewSourceSelected: {
 				name: 'Program/Preview: Source Selected',
 				description: 'Active when the selected source is currently selected on the Main Program or Preview row.',

@@ -1,6 +1,7 @@
 const net = require('net')
 
 const {
+	BASE_SOURCE_CHOICES,
 	ME_CHOICES,
 	ME_SOURCE_CHOICES,
 	PROGRAM_SOURCE_CHOICES,
@@ -54,6 +55,25 @@ module.exports = {
 					}
 
 					self.sendShortcutCommand(shortcutName, value)
+				},
+			},
+			toggleLiveMatte: {
+				name: 'LiveMatte: Toggle',
+				description: 'Toggle LiveMatte on or off for the selected source.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Source',
+						id: 'source',
+						default: 'Net',
+						choices: BASE_SOURCE_CHOICES,
+					},
+				],
+				callback: async (action) => {
+					const source = String(action.options.source || 'Net').toLowerCase()
+					const shortcutName = `${source}_toggle_livematte`
+
+					self.sendShortcutCommand(shortcutName, '')
 				},
 			},
 			setProgramPreviewSource: {
