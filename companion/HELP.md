@@ -507,7 +507,7 @@ After reconnecting, the module registers for `NTK_states` again so that state fe
 
 ## Current Beta Functionality
 
-Version `1.0.0-beta.1.3` provides:
+Version `1.0.0-beta.1.4` provides:
 
 - Legacy TriCaster TCP connection on port 5951
 - `NTK_states` registration
@@ -518,24 +518,30 @@ Version `1.0.0-beta.1.3` provides:
 - Dedicated Main Program AUTO and CUT control
 - Dedicated Main DSK source and transition controls
 - Dedicated M/E A/B row source control
-- Dedicated M/E DSK source control
-- Dedicated M/E transition controls
+- Dedicated M/E DSK source and transition controls
 - Main FX source control
-- Output 2 source control including M/E routing choices
+- Output 2 source control including M/E, Program, Preview, Program Clean, and numbered framebuffer choices
+- Destination-specific source-choice lists
+- GFX1 (Stills) and GFX2 (Titles) friendly source naming
 - Dedicated Program/Preview source feedback
-- Dedicated Main DSK on-air feedback
+- Dedicated Main DSK source-selected and on-air feedback
 - Dedicated M/E row and DSK source feedback
+- Dedicated M/E DSK on-air feedback
 - Dedicated Output 2 source feedback
+- LiveMatte toggle action for base sources
+- LiveMatte status feedback for base sources
 - DDR playing feedback
-- Program/Preview tally feedback with multiple-source parsing
+- Program/Preview tally feedback with multiple-source parsing and numbered framebuffer choices
 - Expanded Companion variables for useful TriCaster states
+- Case-insensitive matching for dedicated source feedbacks
+- Automatic reevaluation of dedicated feedbacks when shortcut states change
 - Advanced single-state feedback
 - Advanced multiple-condition feedback
 - Advanced direct shortcut-command action
 - Automatic reconnection of the persistent state connection
 - Optional verbose logging
 
-The Beta 1.3 implementation has passed development syntax and Companion module build checks but has not yet completed live TriCaster testing.
+The Beta 1.4 implementation has passed development syntax and Companion module build checks but has not yet completed live TriCaster testing.
 
 ## Known Limitations and Future Development
 

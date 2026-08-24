@@ -18,7 +18,7 @@ A primary goal of the module is reliable **state feedback**, allowing Companion 
 
 ## Current Status
 
-Version `1.0.0-beta.1.3` is the current development beta.
+Version `1.0.0-beta.1.4` is the current development beta.
 
 Version `1.0.0-beta.1` established the initial TCP 5951 connection, `NTK_states` reception, parsing, and single-state feedback functionality.
 
@@ -28,7 +28,9 @@ Version `1.0.0-beta.1.2` added a generic shortcut command action for sending leg
 
 Version `1.0.0-beta.1.3` adds dedicated user-friendly actions and feedbacks for commonly used TriCaster functions, expands the available Companion variables, and retains the generic shortcut action and feedbacks as Advanced tools.
 
-Beta 1.3 has completed development build checks but has not yet completed live TriCaster testing.
+Version `1.0.0-beta.1.4` improves dedicated feedback state updating, normalizes source-state comparisons, expands source choices and framebuffer support, adds Program DSK source control and feedback, adds M/E DSK on-air feedback, and adds LiveMatte toggle control and status feedback.
+
+Beta 1.4 has completed development syntax and Companion module build checks but has not yet completed live TriCaster testing.
 
 Current functionality includes:
 
@@ -68,9 +70,9 @@ For normal installation, Node.js, npm, Yarn, and other development tools are **n
 
 Download the `.tgz` file attached to the desired GitHub Release.
 
-For Beta 1.3:
+For Beta 1.4:
 
-`newtek-tricaster-legacy-1.0.0-beta.1.3.tgz`
+`newtek-tricaster-legacy-1.0.0-beta.1.4.tgz`
 
 Install the module package through Bitfocus Companion's module/developer-module installation interface.
 
