@@ -18,7 +18,7 @@ A primary goal of the module is reliable **state feedback**, allowing Companion 
 
 ## Current Status
 
-Version `1.0.0-beta.1.4` is the current development beta.
+Version `1.0.0-beta.1.5` is the current development beta.
 
 Version `1.0.0-beta.1` established the initial TCP 5951 connection, `NTK_states` reception, parsing, and single-state feedback functionality.
 
@@ -30,7 +30,9 @@ Version `1.0.0-beta.1.3` adds dedicated user-friendly actions and feedbacks for 
 
 Version `1.0.0-beta.1.4` improves dedicated feedback state updating, normalizes source-state comparisons, expands source choices and framebuffer support, adds Program DSK source control and feedback, adds M/E DSK on-air feedback, and adds LiveMatte toggle control and status feedback.
 
-Beta 1.4 has completed development syntax and Companion module build checks but has not yet completed live TriCaster testing.
+Version `1.0.0-beta.1.5` fixes numbered-buffer source feedback for Program and M/E DSKs and adds a dedicated action for running TriCaster macros by name.
+
+Beta 1.4 completed live TriCaster testing. All planned functionality passed except numbered-buffer source feedback for Program and M/E DSKs, which is corrected in Beta 1.5.
 
 Current functionality includes:
 
@@ -70,9 +72,9 @@ For normal installation, Node.js, npm, Yarn, and other development tools are **n
 
 Download the `.tgz` file attached to the desired GitHub Release.
 
-For Beta 1.4:
+For Beta 1.5:
 
-`newtek-tricaster-legacy-1.0.0-beta.1.4.tgz`
+`newtek-tricaster-legacy-1.0.0-beta.1.5.tgz`
 
 Install the module package through Bitfocus Companion's module/developer-module installation interface.
 
@@ -189,6 +191,24 @@ Sets the source routed to TriCaster Output 2.
 
 The Output 2 source list includes direct sources as well as M/E 1-8 where supported by the TriCaster.
 
+### Macro: Run by Name
+
+Runs a TriCaster macro by its exact macro name.
+
+Enter the macro name in the **Macro Name** field.
+
+For example:
+
+`Combined Screens`
+
+The module sends the legacy shortcut command:
+
+```xml
+<shortcut name='play_macro_byname' value='Combined Screens' />
+```
+
+Macro names containing spaces are supported.
+
 ### Advanced: Send Shortcut Command
 
 This action provides direct access to the legacy TriCaster shortcut command interface.
@@ -260,6 +280,14 @@ Select Main DSK 1 or DSK 2.
 The feedback becomes active whenever the selected DSK is contributing to Program.
 
 A DSK is considered contributing whenever its reported transition/on-air value is greater than zero. This means the feedback becomes active while the DSK is transitioning on and remains active while it is transitioning off until its contribution reaches zero.
+
+### Program DSK: Source Selected
+
+Select Main DSK 1 or DSK 2 and the source to monitor.
+
+The feedback becomes active when the selected source is currently selected on that Main DSK.
+
+For numbered framebuffer sources, the module uses the TriCaster's numeric DSK source state because legacy TriCaster systems may report the persistent named source only as `framebuffer`.
 
 ### M/E Row: Source Selected
 
@@ -439,12 +467,9 @@ Until live testing is completed, Beta 1.3 functionality should continue to be co
 
 Areas that may be investigated in future versions include:
 
-- Additional DDR/media-player control
-- DDR Next/Previous and additional playback functions
-- Forced-state behavior for DDR Loop, Single, and Autoplay controls
+- Dedicated DDR/media-player actions based on commands already verified on legacy hardware
 - Audio control
 - Graphics and media selection
-- Loading media into DDRs
 - Additional source-choice discovery
 - M/E C and D row behavior
 - Additional M/E and FX behavior
@@ -454,6 +479,7 @@ Areas that may be investigated in future versions include:
 - Additional legacy TriCaster model compatibility
 - Reconnection/error-handling improvements if testing shows they are needed
 - Additional dedicated actions and feedbacks based on verified legacy commands
+- Generic framebuffer assignment using verified dictionary-style TriCaster commands
 
 Features should be added based on behavior verified on legacy TriCaster hardware rather than assuming that commands or states used by newer TriCaster systems behave identically.
 

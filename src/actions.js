@@ -57,6 +57,28 @@ module.exports = {
 					self.sendShortcutCommand(shortcutName, value)
 				},
 			},
+			runMacroByName: {
+				name: 'Macro: Run by Name',
+				description: 'Run a TriCaster macro by its exact macro name.',
+				options: [
+					{
+						type: 'textinput',
+						label: 'Macro Name',
+						id: 'macroName',
+						default: '',
+					},
+				],
+				callback: async (action) => {
+					const macroName = String(action.options.macroName || '').trim()
+
+					if (!macroName) {
+						self.log('warn', 'Macro not run because Macro Name is blank.')
+						return
+					}
+
+					self.sendShortcutCommand('play_macro_byname', macroName)
+				},
+			},
 			toggleLiveMatte: {
 				name: 'LiveMatte: Toggle',
 				description: 'Toggle LiveMatte on or off for the selected source.',

@@ -60,7 +60,7 @@ The commonly used states exposed as Companion variables can be viewed without en
 
 ## Actions
 
-Beta 1.3 provides dedicated actions for commonly used TriCaster controls. The Advanced shortcut action remains available for development, troubleshooting, and commands that do not yet have dedicated actions.
+The module provides dedicated actions for commonly used TriCaster controls. The Advanced shortcut action remains available for development, troubleshooting, and commands that do not yet have dedicated actions.
 
 ### Program/Preview: Set Source
 
@@ -193,6 +193,24 @@ Output 2 uses a separate choice list from normal source-selection actions becaus
 
 Available choices include direct sources and M/E 1-8 where supported by the TriCaster.
 
+### Macro: Run by Name
+
+Runs a TriCaster macro by its exact macro name.
+
+Enter the desired macro name in the **Macro Name** field.
+
+For example:
+
+`Combined Screens`
+
+The module sends:
+
+```xml
+<shortcut name='play_macro_byname' value='Combined Screens' />
+```
+
+Macro names containing spaces are supported.
+
 ### Advanced: Send Shortcut Command
 
 Provides direct access to the legacy TriCaster shortcut command interface.
@@ -281,6 +299,14 @@ The feedback becomes active whenever the selected DSK's reported transition/on-a
 
 This means the feedback activates as the DSK begins transitioning on and remains active while the DSK transitions off until its contribution reaches zero.
 
+### Program DSK: Source Selected
+
+Select Main DSK 1 or DSK 2 and the source to monitor.
+
+The feedback becomes active when the selected source is currently selected on that Main DSK.
+
+For numbered framebuffer sources, the module uses the TriCaster's numeric DSK source state because legacy TriCaster systems may report the persistent named source only as `framebuffer`.
+
 ### M/E Row: Source Selected
 
 Indicates whether a selected source is currently selected on an M/E A or B row.
@@ -316,7 +342,9 @@ Choose:
 
 Choose the source to monitor.
 
-The feedback becomes active when the selected source exactly matches the source reported by that M/E DSK.
+The feedback becomes active when the selected source is currently selected on that M/E DSK.
+
+For numbered framebuffer sources, the module uses the TriCaster's numeric DSK source state because legacy TriCaster systems may report the persistent named source only as `framebuffer`.
 
 ### Output 2: Source Selected
 
@@ -507,7 +535,7 @@ After reconnecting, the module registers for `NTK_states` again so that state fe
 
 ## Current Beta Functionality
 
-Version `1.0.0-beta.1.4` provides:
+Version `1.0.0-beta.1.5` provides:
 
 - Legacy TriCaster TCP connection on port 5951
 - `NTK_states` registration
@@ -540,19 +568,18 @@ Version `1.0.0-beta.1.4` provides:
 - Advanced direct shortcut-command action
 - Automatic reconnection of the persistent state connection
 - Optional verbose logging
+- Dedicated Macro: Run by Name action
+- Correct numbered-buffer source feedback for Main and M/E DSKs
 
-The Beta 1.4 implementation has passed development syntax and Companion module build checks but has not yet completed live TriCaster testing.
+Beta 1.4 completed live TriCaster testing. Beta 1.5 contains the numbered-buffer DSK feedback correction identified during that testing and adds the hardware-verified Macro: Run by Name action.
 
 ## Known Limitations and Future Development
 
 Potential future development includes:
 
-- Additional DDR/media-player control
-- DDR Next/Previous and additional playback functions
-- Forced-state behavior for DDR Loop, Single, and Autoplay controls
+- Dedicated DDR/media-player actions based on commands already verified on legacy hardware
 - Audio control
 - Graphics and media selection
-- Loading media into DDRs
 - Additional source-choice discovery
 - M/E C and D row behavior
 - Additional M/E and FX behavior
@@ -561,6 +588,7 @@ Potential future development includes:
 - Additional legacy TriCaster model compatibility
 - Reconnection or command error-handling improvements if testing shows they are needed
 - Additional dedicated actions and feedbacks based on verified legacy commands
+- Generic framebuffer assignment using verified dictionary-style TriCaster commands
 
 Features should be added based on behavior verified on legacy TriCaster hardware rather than assuming that commands or states used by newer TriCaster systems behave identically.
 

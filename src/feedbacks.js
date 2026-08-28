@@ -12,6 +12,22 @@ function normalizeSource(value) {
 	return String(value ?? '').trim().toLowerCase()
 }
 
+function getBufferSelectValue(source) {
+	const match = /^BFR(\d+)$/i.exec(String(source ?? '').trim())
+
+	if (!match) {
+		return null
+	}
+
+	const bufferNumber = Number(match[1])
+
+	if (bufferNumber < 1 || bufferNumber > 15) {
+		return null
+	}
+
+	return bufferNumber + 13
+}
+
 module.exports = {
 	initFeedbacks() {
 		const self = this
@@ -137,10 +153,15 @@ module.exports = {
 					},
 				],
 				callback: (feedback) => {
-					const stateName =
-						feedback.options.dsk === '2'
-							? 'main_dsk2_select_named_input'
-							: 'main_dsk1_select_named_input'
+					const dsk = feedback.options.dsk === '2' ? '2' : '1'
+					const bufferSelectValue = getBufferSelectValue(feedback.options.source)
+
+					if (bufferSelectValue !== null) {
+						const stateName = `main_dsk${dsk}_select`
+						return Number(self.shortcutStates[stateName]) === bufferSelectValue
+					}
+
+					const stateName = `main_dsk${dsk}_select_named_input`
 
 					return (
 						normalizeSource(self.shortcutStates[stateName]) ===
@@ -216,6 +237,13 @@ module.exports = {
 				],
 				callback: (feedback) => {
 					const me = String(feedback.options.me || '1')
+					const bufferSelectValue = getBufferSelectValue(feedback.options.source)
+
+					if (bufferSelectValue !== null) {
+						const stateName = `v${me}_dsk1_select`
+						return Number(self.shortcutStates[stateName]) === bufferSelectValue
+					}
+
 					const stateName = `v${me}_dsk1_select_named_input`
 
 					return normalizeSource(self.shortcutStates[stateName]) === normalizeSource(feedback.options.source)
