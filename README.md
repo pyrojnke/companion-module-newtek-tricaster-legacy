@@ -2,9 +2,9 @@
 
 A Bitfocus Companion module for older NewTek TriCaster systems that use the legacy TCP control and `NTK_states` interface.
 
-> **Beta**
+> **Stable Release**
 >
-> This module is under active development and should be considered pre-release software. Initial development and testing have been performed with a NewTek TriCaster XD860.
+> Version `1.0.0` is the first stable release of this module. Development and hardware validation have been performed with a NewTek TriCaster XD860.
 
 ## Purpose
 
@@ -18,7 +18,7 @@ A primary goal of the module is reliable **state feedback**, allowing Companion 
 
 ## Current Status
 
-Version `1.0.0-beta.1.5` is the current development beta.
+Version `1.0.0` is the current stable release.
 
 Version `1.0.0-beta.1` established the initial TCP 5951 connection, `NTK_states` reception, parsing, and single-state feedback functionality.
 
@@ -32,7 +32,9 @@ Version `1.0.0-beta.1.4` improves dedicated feedback state updating, normalizes 
 
 Version `1.0.0-beta.1.5` fixes numbered-buffer source feedback for Program and M/E DSKs and adds a dedicated action for running TriCaster macros by name.
 
-Beta 1.4 completed live TriCaster testing. All planned functionality passed except numbered-buffer source feedback for Program and M/E DSKs, which is corrected in Beta 1.5.
+Version `1.0.0` promotes the hardware-validated Beta 1.5 feature set to the first stable release with no functional changes.
+
+Beta 1.5 completed live hardware validation on the tested TriCaster XD860. The validated Beta 1.5 codebase is the basis of stable version `1.0.0`.
 
 Current functionality includes:
 
@@ -66,15 +68,15 @@ Different models and software versions may expose different shortcut states, sou
 
 ## Installation
 
-### Prebuilt Beta Package
+### Prebuilt Package
 
 For normal installation, Node.js, npm, Yarn, and other development tools are **not required**.
 
 Download the `.tgz` file attached to the desired GitHub Release.
 
-For Beta 1.5:
+For version 1.0.0:
 
-`newtek-tricaster-legacy-1.0.0-beta.1.5.tgz`
+`newtek-tricaster-legacy-1.0.0.tgz`
 
 Install the module package through Bitfocus Companion's module/developer-module installation interface.
 
@@ -114,7 +116,7 @@ Each action execution creates a temporary TCP command connection, sends the requ
 
 ## Actions
 
-Beta 1.3 provides dedicated actions for commonly used TriCaster controls.
+The module provides dedicated actions for commonly used TriCaster controls.
 
 ### Program/Preview: Set Source
 
@@ -260,7 +262,7 @@ Use the dedicated actions when an appropriate dedicated action exists. The Advan
 
 ## Feedbacks
 
-Beta 1.3 provides dedicated boolean feedbacks for commonly used TriCaster states.
+The module provides dedicated boolean feedbacks for commonly used TriCaster states.
 
 Companion controls the styling applied when these feedbacks are active.
 
@@ -425,7 +427,7 @@ The exact states and values exposed by other legacy TriCaster models may differ.
 
 ## Source and Output Choices
 
-Beta 1.3 separates normal source choices from Output 2 routing choices.
+The module separates normal source choices from Output 2 routing choices.
 
 The standard source list is used for controls such as Program/Preview and M/E source selection.
 
@@ -451,17 +453,24 @@ If the persistent state connection to the TriCaster is lost, the module attempts
 
 After reconnecting, the module registers for `NTK_states` again so that state feedback and variables can resume updating.
 
-## Beta 1.3 Development Status
+## Version 1.0.0 Validation Status
 
-Beta 1.3 expands the module substantially beyond the generic action and feedback interfaces provided by earlier betas.
+Version `1.0.0` is based on the Beta 1.5 codebase that completed live hardware validation on the tested TriCaster XD860.
 
-The dedicated actions, feedbacks, and expanded variables have been implemented and successfully passed syntax and Companion module build checks.
+The validated test scope included:
 
-Beta 1.3 has not yet completed live testing against the TriCaster.
+- Program and Preview source control and feedback
+- Main DSK source control, numbered-buffer feedback, transitions, and on-air feedback
+- M/E row source control and feedback
+- M/E DSK source control, numbered-buffer feedback, transitions, and on-air feedback
+- Output 2 routing and feedback, including Program Clean and numbered buffers
+- LiveMatte control and feedback
+- Program/Preview tally feedback
+- Macro execution by name, including macro names containing spaces
+- Advanced shortcut-state feedback
+- Existing transition and Main FX action regression checks
 
-Development and live TriCaster testing may occur at separate locations, so a development build may be packaged before live hardware validation is complete.
-
-Until live testing is completed, Beta 1.3 functionality should continue to be considered pre-release.
+Other legacy TriCaster models and software versions may expose different commands, states, or capabilities and have not yet been fully validated.
 
 ## Known Limitations and Future Development
 
@@ -500,8 +509,8 @@ When reporting compatibility or a problem, please include:
 
 Do not include passwords, API credentials, or other sensitive information in logs or public issue reports.
 
-## Beta Warning
+## Production Use
 
-This is pre-release software.
+Version `1.0.0` has completed hardware validation on the tested TriCaster XD860.
 
-Do not rely on this module as the sole control or status indication for critical production functions until the required behavior has been tested on your particular TriCaster and Companion installation.
+Because legacy TriCaster models and software builds may expose different commands, states, and capabilities, verify required functions on your particular TriCaster and Companion installation before relying on the module for critical production control or status indication.

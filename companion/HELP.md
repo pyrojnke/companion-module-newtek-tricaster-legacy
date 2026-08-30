@@ -2,9 +2,9 @@
 
 A Bitfocus Companion module for older NewTek TriCaster systems that use the legacy TCP control and state interface.
 
-> **Beta Software**
+> **Version 1.0.0**
 >
-> This module is under active development. It has been developed and initially tested with a NewTek TriCaster XD860 running build 2-6-170817. Other legacy TriCaster models may expose different states, commands, source names, or fewer features.
+> This stable release has been developed and hardware-validated with a NewTek TriCaster XD860 running build 2-6-170817. Other legacy TriCaster models may expose different states, commands, source names, or fewer features.
 
 ## Why This Module Exists
 
@@ -265,7 +265,7 @@ Available shortcut commands and accepted values may differ between TriCaster mod
 
 ## Feedbacks
 
-Beta 1.3 provides dedicated boolean feedbacks for commonly used TriCaster states.
+The module provides dedicated boolean feedbacks for commonly used TriCaster states.
 
 Companion determines the button styling applied when a boolean feedback is active.
 
@@ -533,9 +533,9 @@ If the persistent state connection to the TriCaster is lost, the module attempts
 
 After reconnecting, the module registers for `NTK_states` again so that state feedback and variables can resume updating.
 
-## Current Beta Functionality
+## Version 1.0.0 Functionality
 
-Version `1.0.0-beta.1.5` provides:
+Version `1.0.0` provides:
 
 - Legacy TriCaster TCP connection on port 5951
 - `NTK_states` registration
@@ -571,7 +571,7 @@ Version `1.0.0-beta.1.5` provides:
 - Dedicated Macro: Run by Name action
 - Correct numbered-buffer source feedback for Main and M/E DSKs
 
-Beta 1.4 completed live TriCaster testing. Beta 1.5 contains the numbered-buffer DSK feedback correction identified during that testing and adds the hardware-verified Macro: Run by Name action.
+Beta 1.5 completed live hardware validation on the tested TriCaster XD860. Version `1.0.0` promotes that validated codebase to the first stable release without functional changes.
 
 ## Known Limitations and Future Development
 
@@ -623,8 +623,8 @@ When reporting compatibility or a problem, please include:
 
 Do not include passwords, API credentials, or other sensitive information in logs or public issue reports.
 
-## Beta Warning
+## Production Use
 
-This is pre-release software.
+Version `1.0.0` has completed hardware validation on the tested TriCaster XD860.
 
-Do not rely on this module as the sole control or status indication for critical production functions until the required behavior has been tested on your particular TriCaster and Companion installation.
+Because legacy TriCaster models and software builds may expose different states, commands, and capabilities, verify required functions on your particular system before relying on the module for critical production control or status indication.
