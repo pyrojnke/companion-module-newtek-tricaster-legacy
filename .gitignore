@@ -2,3 +2,4 @@ node_modules/
 pkg/
 *.tgz
 *.beta10-backup
+.yarn/install-state.gz

@@ -145,6 +145,10 @@ module.exports = {
 			name: 'Sources currently contributing to Preview',
 		})
 
-		this.setVariableDefinitions(variables)
+		this.setVariableDefinitions(
+			Object.fromEntries(
+				variables.map(({ variableId, ...definition }) => [variableId, definition])
+			)
+		)
 	},
 }

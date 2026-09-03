@@ -1,5 +1,6 @@
 {
 "id": "newtek-tricaster-legacy",
+"type": "connection",
 "name": "NewTek TriCaster Legacy",
 "shortname": "TriCaster Legacy",
 "description": "Legacy NewTek TriCaster TCP 5951 state and feedback support",
@@ -14,7 +15,7 @@
 ],
 "legacyIds": [],
 "runtime": {
-"type": "node18",
+"type": "node26",
 "api": "nodejs-ipc",
 "apiVersion": "0.0.0",
 "entrypoint": "../index.js"

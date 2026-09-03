@@ -1,4 +1,4 @@
-const { InstanceBase, InstanceStatus, runEntrypoint } = require('@companion-module/base')
+const { InstanceBase, InstanceStatus } = require('@companion-module/base')
 const net = require('net')
 
 const config = require('./src/config')
@@ -222,4 +222,4 @@ class TriCasterLegacyInstance extends InstanceBase {
 	}
 }
 
-runEntrypoint(TriCasterLegacyInstance, [])
+module.exports = TriCasterLegacyInstance
