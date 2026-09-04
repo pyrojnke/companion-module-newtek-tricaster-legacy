@@ -2,9 +2,11 @@
 
 A Bitfocus Companion module for older NewTek TriCaster systems that use the legacy TCP control and state interface.
 
-> **Version 1.0.0**
+> **Version 1.1.0**
 >
-> This stable release has been developed and hardware-validated with a NewTek TriCaster XD860 running build 2-6-170817. Other legacy TriCaster models may expose different states, commands, source names, or fewer features.
+> Version `1.1.0` is the current stable release. It updates the module to the current Bitfocus Companion module API, runtime, and development toolchain while preserving the TriCaster control and feedback behavior of version `1.0.0`.
+>
+> Version `1.1.0` has been hardware regression-tested with a NewTek TriCaster XD860 running build `2-6-170817`. No new TriCaster control or feedback features are introduced in this release. Other legacy TriCaster models may expose different states, commands, source names, or fewer features.
 
 ## Why This Module Exists
 
@@ -533,9 +535,9 @@ If the persistent state connection to the TriCaster is lost, the module attempts
 
 After reconnecting, the module registers for `NTK_states` again so that state feedback and variables can resume updating.
 
-## Version 1.0.0 Functionality
+## Version 1.1.0 Functionality
 
-Version `1.0.0` provides:
+Version `1.1.0` provides:
 
 - Legacy TriCaster TCP connection on port 5951
 - `NTK_states` registration
@@ -571,7 +573,9 @@ Version `1.0.0` provides:
 - Dedicated Macro: Run by Name action
 - Correct numbered-buffer source feedback for Main and M/E DSKs
 
-Beta 1.5 completed live hardware validation on the tested TriCaster XD860. Version `1.0.0` promotes that validated codebase to the first stable release without functional changes.
+Version `1.0.0` was the first stable release and was based on the Beta 1.5 codebase that completed live hardware validation on the tested TriCaster XD860.
+
+Version `1.1.0` preserves that feature set while updating the Companion module API, Node.js runtime, and development toolchain. The existing actions, feedbacks, variables, state handling, and legacy TCP control were regression-tested on the same TriCaster XD860 after the migration and passed without functional regressions.
 
 ## Known Limitations and Future Development
 
@@ -625,6 +629,6 @@ Do not include passwords, API credentials, or other sensitive information in log
 
 ## Production Use
 
-Version `1.0.0` has completed hardware validation on the tested TriCaster XD860.
+Version `1.1.0` has completed hardware regression testing on the tested TriCaster XD860 running build `2-6-170817`.
 
 Because legacy TriCaster models and software builds may expose different states, commands, and capabilities, verify required functions on your particular system before relying on the module for critical production control or status indication.

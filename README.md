@@ -4,7 +4,23 @@ A Bitfocus Companion module for older NewTek TriCaster systems that use the lega
 
 > **Stable Release**
 >
-> Version `1.0.0` is the first stable release of this module. Development and hardware validation have been performed with a NewTek TriCaster XD860.
+> Version `1.1.0` is the current stable release.
+
+Version `1.1.0` is a maintenance and compatibility release that modernizes the module SDK, runtime, and development toolchain while preserving the TriCaster control and feedback behavior of version `1.0.0`. No new TriCaster features are introduced in this release.
+
+The 1.1.0 migration includes:
+
+- Bitfocus Companion module API 2 compatibility
+- `@companion-module/base` 2.1.3
+- `@companion-module/tools` 3.1.0
+- Node.js 26 module runtime
+- Yarn 4.18.0 development tooling
+- ESLint 10.2.0
+- Prettier 3.8.1
+- Updated API 2 variable-definition format
+- Updated module entrypoint/export structure for the current Companion module runtime
+
+Version `1.1.0` completed hardware regression testing on the tested NewTek TriCaster XD860 running build `2-6-170817`. The existing version `1.0.0` feature set passed regression testing after the SDK/runtime migration.
 
 ## Purpose
 
