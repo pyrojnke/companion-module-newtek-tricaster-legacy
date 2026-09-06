@@ -265,6 +265,114 @@ The Advanced action intentionally allows arbitrary shortcut names and values so 
 
 Available shortcut commands and accepted values may differ between TriCaster models and software versions.
 
+### Advanced: Send Dictionary Shortcut
+
+Provides experimental access to legacy TriCaster shortcut commands that require multiple Key/Value parameters.
+
+This action is intended primarily for:
+
+- Development
+- Hardware testing
+- Command discovery
+- Future functions that require more than a single shortcut value
+
+Configure:
+
+**Shortcut Name**
+
+Enter the exact TriCaster shortcut name.
+
+**Number of Keys**
+
+Select how many Key/Value fields should be available.
+
+The action supports 1 through 13 Key/Value pairs.
+
+Only keys within the selected count are considered. If a higher-numbered field previously contained a value and the Number of Keys is later reduced, the hidden field is ignored.
+
+For each selected key, enter:
+
+- **Key N Name**
+- **Key N Value**
+
+A Key/Value pair is sent only when both its Name and Value are nonblank. Blank or incomplete pairs are ignored.
+
+Dictionary key names, value meanings, and expected value types depend on the specific TriCaster shortcut.
+
+For example, the legacy framebuffer-change shortcut definition uses these dictionary keys:
+
+- `ShortCutName`
+- `FrmBfrName`
+- `UpdateUI`
+
+A development test configuration might therefore use:
+
+Shortcut Name:
+
+`v1_frmbfr_change`
+
+Key 1 Name:
+
+`ShortCutName`
+
+Key 1 Value:
+
+`v1_a_row_named_input`
+
+Key 2 Name:
+
+`FrmBfrName`
+
+Key 2 Value:
+
+`BFR1`
+
+Key 3 Name:
+
+`UpdateUI`
+
+Key 3 Value:
+
+`true`
+
+The current implementation serializes these Key/Value pairs as additional XML attributes on the legacy `<shortcut>` command.
+
+**This dictionary transport has not yet been hardware-validated on the tested XD860 and should be treated as experimental until that validation is completed.**
+
+Use known TriCaster shortcut definitions when configuring this action rather than guessing command names, dictionary keys, or value types.
+
+## Presets
+
+Version `1.2.0-beta.1` adds a beginner-oriented preset library for commonly used TriCaster controls.
+
+Preset groups currently include:
+
+- Program
+- Preview
+- Main Program DSK 1 and DSK 2
+- M/E 1 through M/E 8
+- Output 2
+
+The presets provide ready-made buttons for common source selections and transitions using the module's dedicated actions and feedbacks.
+
+The module also includes regression-testing preset groups:
+
+- **Regression Testing (Live Safe)**
+- **Regression Testing (DO NOT USE WHILE LIVE)**
+
+These are intended for module development and hardware regression testing rather than normal operator use.
+
+Regression presets include representative checks for:
+
+- M/E source and DSK controls
+- Companion variables
+- Program/Preview tally feedback
+- Advanced single-state feedback
+- Advanced multiple-condition feedback
+- Program/Preview controls
+- Main DSK controls
+- Output 2 routing
+
 ## Feedbacks
 
 The module provides dedicated boolean feedbacks for commonly used TriCaster states.

@@ -5,6 +5,7 @@ const config = require('./src/config')
 const feedbacks = require('./src/feedbacks')
 const variables = require('./src/variables')
 const actions = require('./src/actions')
+const presets = require('./src/presets')
 
 class TriCasterLegacyInstance extends InstanceBase {
 	constructor(internal) {
@@ -15,6 +16,7 @@ class TriCasterLegacyInstance extends InstanceBase {
 			...feedbacks,
 			...variables,
 			...actions,
+			...presets,
 		})
 
 		this.socket = null
@@ -31,6 +33,7 @@ class TriCasterLegacyInstance extends InstanceBase {
 		this.initFeedbacks()
 		this.initVariables()
 		this.initActions()
+		this.initPresets()
 		this.initConnection()
 	}
 

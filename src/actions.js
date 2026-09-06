@@ -17,6 +17,32 @@ function escapeXmlAttribute(value) {
 		.replace(/>/g, '&gt;')
 }
 
+const DICTIONARY_KEY_COUNT_CHOICES = Array.from({ length: 13 }, (_, index) => ({
+	id: String(index + 1),
+	label: String(index + 1),
+}))
+
+const DICTIONARY_KEY_FIELDS = Array.from({ length: 12 }, (_, index) => {
+	const keyNumber = index + 2
+
+	return [
+		{
+			type: 'textinput',
+			label: `Key ${keyNumber} Name`,
+			id: `key${keyNumber}Name`,
+			default: '',
+			isVisibleExpression: `$(options:keyCount) >= ${keyNumber}`,
+		},
+		{
+			type: 'textinput',
+			label: `Key ${keyNumber} Value`,
+			id: `key${keyNumber}Value`,
+			default: '',
+			isVisibleExpression: `$(options:keyCount) >= ${keyNumber}`,
+		},
+	]
+}).flat()
+
 module.exports = {
 	initActions() {
 		const self = this
@@ -55,6 +81,70 @@ module.exports = {
 					}
 
 					self.sendShortcutCommand(shortcutName, value)
+				},
+			},
+			sendDictionaryShortcutCommand: {
+				name: 'Advanced: Send Dictionary Shortcut',
+				description: 'Send a legacy shortcut command with multiple Key/Value parameters to the TriCaster.',
+				options: [
+					{
+						type: 'textinput',
+						label: 'Shortcut Name',
+						id: 'shortcutName',
+						default: '',
+					},
+					{
+						type: 'dropdown',
+						label: 'Number of Keys',
+						id: 'keyCount',
+						default: '1',
+						choices: DICTIONARY_KEY_COUNT_CHOICES,
+						disableAutoExpression: true,
+					},
+					{
+						type: 'textinput',
+						label: 'Key 1 Name',
+						id: 'key1Name',
+						default: '',
+					},
+					{
+						type: 'textinput',
+						label: 'Key 1 Value',
+						id: 'key1Value',
+						default: '',
+					},
+					...DICTIONARY_KEY_FIELDS,
+				],
+				callback: async (action) => {
+					const shortcutName = String(action.options.shortcutName || '').trim()
+					const keyCount = Math.min(13, Math.max(1, Number.parseInt(action.options.keyCount, 10) || 1))
+					const dictionaryEntries = []
+
+					for (let keyNumber = 1; keyNumber <= keyCount; keyNumber++) {
+						const keyName = String(action.options[`key${keyNumber}Name`] ?? '').trim()
+						const keyValue = String(action.options[`key${keyNumber}Value`] ?? '').trim()
+
+						if (!keyName || !keyValue) {
+							continue
+						}
+
+						dictionaryEntries.push({
+							name: keyName,
+							value: keyValue,
+						})
+					}
+
+					if (!shortcutName) {
+						self.log('warn', 'Dictionary shortcut command not sent because Shortcut Name is blank.')
+						return
+					}
+
+					if (dictionaryEntries.length === 0) {
+						self.log('warn', 'Dictionary shortcut command not sent because no complete Key/Value pairs were provided.')
+						return
+					}
+
+					self.sendDictionaryShortcutCommand(shortcutName, dictionaryEntries)
 				},
 			},
 			runMacroByName: {
@@ -353,6 +443,40 @@ module.exports = {
 
 		commandSocket.on('error', (error) => {
 			this.log('error', `Shortcut command connection error: ${error.message}`)
+			commandSocket.destroy()
+		})
+	},
+	sendDictionaryShortcutCommand(shortcutName, dictionaryEntries) {
+		if (!this.config.host) {
+			this.log('warn', 'Dictionary shortcut command not sent because the TriCaster IP address is not configured.')
+			return
+		}
+
+		const escapedShortcutName = escapeXmlAttribute(shortcutName)
+		const dictionaryAttributes = dictionaryEntries
+			.map(
+				(entry) =>
+					`${escapeXmlAttribute(entry.name)}='${escapeXmlAttribute(entry.value)}'`
+			)
+			.join(' ')
+
+		const command = `<shortcut name='${escapedShortcutName}' ${dictionaryAttributes} />\n`
+
+		const commandSocket = net.createConnection({
+			host: this.config.host,
+			port: 5951,
+		})
+
+		commandSocket.on('connect', () => {
+			if (this.config.verbose) {
+				this.log('debug', `Sending dictionary shortcut command: ${command.trim()}`)
+			}
+
+			commandSocket.end(command)
+		})
+
+		commandSocket.on('error', (error) => {
+			this.log('error', `Dictionary shortcut command connection error: ${error.message}`)
 			commandSocket.destroy()
 		})
 	},

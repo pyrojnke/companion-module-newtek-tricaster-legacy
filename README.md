@@ -34,23 +34,41 @@ A primary goal of the module is reliable **state feedback**, allowing Companion 
 
 ## Current Status
 
-Version `1.0.0` is the current stable release.
+Version `1.1.0` is the current stable release.
 
-Version `1.0.0-beta.1` established the initial TCP 5951 connection, `NTK_states` reception, parsing, and single-state feedback functionality.
+Version `1.2.0-beta.1` is the current development version.
 
-Version `1.0.0-beta.1.1` expanded the feedback system and added selected TriCaster states as Companion variables.
+Version `1.2.0-beta.1` adds the first new feature development since the 1.1.0 SDK/runtime migration.
 
-Version `1.0.0-beta.1.2` added a generic shortcut command action for sending legacy TriCaster shortcut commands directly over TCP port `5951`.
+Current 1.2.0 development includes:
 
-Version `1.0.0-beta.1.3` adds dedicated user-friendly actions and feedbacks for commonly used TriCaster functions, expands the available Companion variables, and retains the generic shortcut action and feedbacks as Advanced tools.
+- Beginner-oriented Companion preset library for commonly used Program, Preview, Main DSK, M/E, and Output 2 controls
+- Regression-testing preset groups for live-safe and do-not-use-while-live testing
+- Preset-based checks for variables, tally feedback, and Advanced feedback behavior
+- New **Advanced: Send Dictionary Shortcut** action for experimental multi-parameter legacy shortcut commands
+- Dictionary shortcut support for 1 through 13 Key/Value pairs
+- Conditional display of only the selected number of Key/Value fields
+- Hidden Key/Value fields above the selected count are ignored
+- Blank or incomplete Key/Value pairs are not sent
+- XML escaping for shortcut names, dictionary key names, and dictionary values
 
-Version `1.0.0-beta.1.4` improves dedicated feedback state updating, normalizes source-state comparisons, expands source choices and framebuffer support, adds Program DSK source control and feedback, adds M/E DSK on-air feedback, and adds LiveMatte toggle control and status feedback.
+The generic dictionary shortcut action is currently **experimental**.
 
-Version `1.0.0-beta.1.5` fixes numbered-buffer source feedback for Program and M/E DSKs and adds a dedicated action for running TriCaster macros by name.
+Its TCP serialization implementation is based on the legacy shortcut XML format and the dictionary structures defined by NewTek, but it has not yet been validated against the tested TriCaster XD860.
 
-Version `1.0.0` promotes the hardware-validated Beta 1.5 feature set to the first stable release with no functional changes.
+Until hardware validation is completed, dictionary shortcut transport should be treated as development functionality rather than production-confirmed behavior.
 
-Beta 1.5 completed live hardware validation on the tested TriCaster XD860. The validated Beta 1.5 codebase is the basis of stable version `1.0.0`.
+The existing version history is:
+
+- `1.0.0-beta.1` established TCP 5951 connection, `NTK_states` reception, parsing, and single-state feedback.
+- `1.0.0-beta.1.1` expanded the feedback system and added selected TriCaster states as Companion variables.
+- `1.0.0-beta.1.2` added a generic shortcut command action for sending legacy TriCaster shortcut commands directly over TCP port `5951`.
+- `1.0.0-beta.1.3` added dedicated user-friendly actions and feedbacks for commonly used TriCaster functions.
+- `1.0.0-beta.1.4` improved feedback behavior, expanded source choices and framebuffer support, and added additional DSK and LiveMatte functionality.
+- `1.0.0-beta.1.5` fixed numbered-buffer DSK feedback and added macro execution by name.
+- `1.0.0` promoted the hardware-validated Beta 1.5 feature set to the first stable release.
+- `1.1.0` migrated the module to the current Companion module API, Node.js runtime, and development toolchain without changing the validated TriCaster feature set.
+- `1.2.0-beta.1` begins new feature development with the preset library and experimental generic dictionary shortcut action.
 
 Current functionality includes:
 
@@ -65,6 +83,9 @@ Current functionality includes:
 - Advanced single-state feedback
 - Advanced multiple-condition feedback with AND/OR and Equal/Not Equal comparisons
 - Advanced shortcut command action for direct legacy command access
+- Experimental Advanced dictionary shortcut action
+- Beginner-oriented preset library
+- Regression-testing preset groups
 - Automatic reconnection after a lost connection
 - Re-registration for state updates after reconnecting
 - Optional verbose logging for development and troubleshooting
