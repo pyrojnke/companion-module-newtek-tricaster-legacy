@@ -3,6 +3,7 @@ const net = require('net')
 const {
 	BASE_SOURCE_CHOICES,
 	ME_CHOICES,
+	DDR_CHOICES,
 	ME_SOURCE_CHOICES,
 	PROGRAM_SOURCE_CHOICES,
 	DSK_SOURCE_CHOICES,
@@ -145,6 +146,177 @@ module.exports = {
 					}
 
 					self.sendDictionaryShortcutCommand(shortcutName, dictionaryEntries)
+				},
+			},
+			ddrPlay: {
+				name: 'DDR: Play',
+				description: 'Play the selected DDR if it is currently stopped.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DDR',
+						id: 'ddr',
+						choices: DDR_CHOICES,
+						default: '1',
+					},
+				],
+				callback: async (action) => {
+					const shortcutName = action.options.ddr === '2' ? 'ddr2_play' : 'ddr_play'
+
+					self.sendShortcutCommand(shortcutName, '')
+				},
+			},
+			ddrStop: {
+				name: 'DDR: Stop',
+				description: 'Stop the selected DDR if it is currently playing.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DDR',
+						id: 'ddr',
+						choices: DDR_CHOICES,
+						default: '1',
+					},
+				],
+				callback: async (action) => {
+					const shortcutName = action.options.ddr === '2' ? 'ddr2_stop' : 'ddr_stop'
+
+					self.sendShortcutCommand(shortcutName, '')
+				},
+			},
+			ddrPreviousClip: {
+				name: 'DDR: Previous Clip',
+				description: 'Move the selected DDR playhead to the previous clip.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DDR',
+						id: 'ddr',
+						choices: DDR_CHOICES,
+						default: '1',
+					},
+				],
+				callback: async (action) => {
+					const shortcutName = action.options.ddr === '2' ? 'ddr2_back' : 'ddr_back'
+
+					self.sendShortcutCommand(shortcutName, '')
+				},
+			},
+			ddrNextClip: {
+				name: 'DDR: Next Clip',
+				description: 'Move the selected DDR playhead to the next clip.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DDR',
+						id: 'ddr',
+						choices: DDR_CHOICES,
+						default: '1',
+					},
+				],
+				callback: async (action) => {
+					const shortcutName = action.options.ddr === '2' ? 'ddr2_forward' : 'ddr_forward'
+
+					self.sendShortcutCommand(shortcutName, '')
+				},
+			},
+			ddrLoopMode: {
+				name: 'DDR: Loop Mode',
+				description: 'Enable, disable, or toggle Loop mode on the selected DDR.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DDR',
+						id: 'ddr',
+						choices: DDR_CHOICES,
+						default: '1',
+					},
+					{
+						type: 'dropdown',
+						label: 'Mode',
+						id: 'mode',
+						choices: [
+							{ id: 'on', label: 'On' },
+							{ id: 'off', label: 'Off' },
+							{ id: 'toggle', label: 'Toggle' },
+						],
+						default: 'toggle',
+					},
+				],
+				callback: async (action) => {
+					const shortcutName =
+						action.options.ddr === '2' ? 'ddr2_loop_mode_toggle' : 'ddr_loop_mode_toggle'
+
+					const value =
+						action.options.mode === 'on' ? 'true' : action.options.mode === 'off' ? 'false' : ''
+
+					self.sendShortcutCommand(shortcutName, value)
+				},
+			},
+			ddrSingleMode: {
+				name: 'DDR: Single Mode',
+				description: 'Enable, disable, or toggle Single mode on the selected DDR.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DDR',
+						id: 'ddr',
+						choices: DDR_CHOICES,
+						default: '1',
+					},
+					{
+						type: 'dropdown',
+						label: 'Mode',
+						id: 'mode',
+						choices: [
+							{ id: 'on', label: 'On' },
+							{ id: 'off', label: 'Off' },
+							{ id: 'toggle', label: 'Toggle' },
+						],
+						default: 'toggle',
+					},
+				],
+				callback: async (action) => {
+					const shortcutName =
+						action.options.ddr === '2' ? 'ddr2_single_mode_toggle' : 'ddr_single_mode_toggle'
+
+					const value =
+						action.options.mode === 'on' ? 'true' : action.options.mode === 'off' ? 'false' : ''
+
+					self.sendShortcutCommand(shortcutName, value)
+				},
+			},
+			ddrAutoplayMode: {
+				name: 'DDR: Autoplay Mode',
+				description: 'Enable, disable, or toggle Autoplay mode on the selected DDR.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DDR',
+						id: 'ddr',
+						choices: DDR_CHOICES,
+						default: '1',
+					},
+					{
+						type: 'dropdown',
+						label: 'Mode',
+						id: 'mode',
+						choices: [
+							{ id: 'on', label: 'On' },
+							{ id: 'off', label: 'Off' },
+							{ id: 'toggle', label: 'Toggle' },
+						],
+						default: 'toggle',
+					},
+				],
+				callback: async (action) => {
+					const shortcutName =
+						action.options.ddr === '2' ? 'ddr2_autoplay_mode_toggle' : 'ddr_autoplay_mode_toggle'
+
+					const value =
+						action.options.mode === 'on' ? 'true' : action.options.mode === 'off' ? 'false' : ''
+
+					self.sendShortcutCommand(shortcutName, value)
 				},
 			},
 			runMacroByName: {

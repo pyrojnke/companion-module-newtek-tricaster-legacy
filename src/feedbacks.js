@@ -1,6 +1,7 @@
 const {
 	BASE_SOURCE_CHOICES,
 	ME_CHOICES,
+	DDR_CHOICES,
 	ME_SOURCE_CHOICES,
 	PROGRAM_SOURCE_CHOICES,
 	DSK_SOURCE_CHOICES,
@@ -311,10 +312,7 @@ module.exports = {
 						type: 'dropdown',
 						label: 'DDR',
 						id: 'ddr',
-						choices: [
-							{ id: '1', label: 'DDR 1' },
-							{ id: '2', label: 'DDR 2' },
-						],
+						choices: DDR_CHOICES,
 						default: '1',
 					},
 				],
@@ -323,6 +321,99 @@ module.exports = {
 						feedback.options.ddr === '2'
 							? 'ddr2_play'
 							: 'ddr_play'
+
+					return String(self.shortcutStates[stateName] ?? '').toLowerCase() === 'true'
+				},
+			},
+			ddrStopped: {
+				name: 'DDR: Stopped',
+				description: 'Active when the selected DDR is currently stopped.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DDR',
+						id: 'ddr',
+						choices: DDR_CHOICES,
+						default: '1',
+					},
+				],
+				callback: (feedback) => {
+					const stateName = feedback.options.ddr === '2' ? 'ddr2_stop' : 'ddr_stop'
+
+					return String(self.shortcutStates[stateName] ?? '').toLowerCase() === 'true'
+				},
+			},
+			ddrLoopMode: {
+				name: 'DDR: Loop Mode',
+				description: 'Active when Loop mode is enabled on the selected DDR.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DDR',
+						id: 'ddr',
+						choices: DDR_CHOICES,
+						default: '1',
+					},
+				],
+				callback: (feedback) => {
+					const stateName = feedback.options.ddr === '2' ? 'ddr2_loop_mode_toggle' : 'ddr_loop_mode_toggle'
+
+					return String(self.shortcutStates[stateName] ?? '').toLowerCase() === 'true'
+				},
+			},
+			ddrSingleMode: {
+				name: 'DDR: Single Mode',
+				description: 'Active when Single mode is enabled on the selected DDR.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DDR',
+						id: 'ddr',
+						choices: DDR_CHOICES,
+						default: '1',
+					},
+				],
+				callback: (feedback) => {
+					const stateName = feedback.options.ddr === '2' ? 'ddr2_single_mode_toggle' : 'ddr_single_mode_toggle'
+
+					return String(self.shortcutStates[stateName] ?? '').toLowerCase() === 'true'
+				},
+			},
+			ddrAutoplayMode: {
+				name: 'DDR: Autoplay Mode',
+				description: 'Active when Autoplay mode is enabled on the selected DDR.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'DDR',
+						id: 'ddr',
+						choices: DDR_CHOICES,
+						default: '1',
+					},
+				],
+				callback: (feedback) => {
+					const stateName =
+						feedback.options.ddr === '2' ? 'ddr2_autoplay_mode_toggle' : 'ddr_autoplay_mode_toggle'
 
 					return String(self.shortcutStates[stateName] ?? '').toLowerCase() === 'true'
 				},

@@ -2,6 +2,7 @@ const { combineRgb } = require('@companion-module/base')
 const {
 	PROGRAM_SOURCE_CHOICES,
 	ME_CHOICES,
+	DDR_CHOICES,
 	ME_SOURCE_CHOICES,
 	DSK_SOURCE_CHOICES,
 	OUTPUT_CHOICES,
@@ -812,6 +813,106 @@ module.exports = {
 					return presetId
 				}
 				
+				const createDdrControlPreset = ({
+					ddrNumber,
+					presetIdSuffix,
+					name,
+					buttonText,
+					buttonTextSize = 47,
+					actionId,
+					actionOptions = {},
+					feedbackId,
+				}) => {
+					const presetId = `ddr${ddrNumber}${presetIdSuffix}`
+
+					presets[presetId] = {
+						type: 'layered',
+						name: `DDR ${ddrNumber} - ${name}`,
+						canvas: {
+							decoration: { isExpression: false, value: 'none' },
+						},
+						elements: [
+							{
+								type: 'box',
+								id: 'background',
+								x: { isExpression: false, value: 0 },
+								y: { isExpression: false, value: 0 },
+								width: { isExpression: false, value: 100 },
+								height: { isExpression: false, value: 100 },
+								color: { isExpression: false, value: colorBlack },
+							},
+							{
+								type: 'text',
+								id: 'header',
+								name: 'Text',
+								x: { isExpression: false, value: 4 },
+								y: { isExpression: false, value: 4 },
+								width: { isExpression: false, value: 92 },
+								height: { isExpression: false, value: 34 },
+								text: { isExpression: false, value: `DDR ${ddrNumber}` },
+								fontsize: { isExpression: false, value: 38 },
+								fontsizeAllowShrink: { isExpression: false, value: true },
+								font: { isExpression: false, value: 'companion-sans' },
+								color: { isExpression: false, value: colorWhite },
+								halign: { isExpression: false, value: 'center' },
+								valign: { isExpression: false, value: 'top' },
+							},
+							{
+								type: 'text',
+								id: 'control',
+								name: 'Text2',
+								x: { isExpression: false, value: 2 },
+								y: { isExpression: false, value: 15 },
+								width: { isExpression: false, value: 96 },
+								height: { isExpression: false, value: 83 },
+								text: { isExpression: false, value: buttonText },
+								fontsize: { isExpression: false, value: buttonTextSize },
+								fontsizeAllowShrink: { isExpression: false, value: true },
+								font: { isExpression: false, value: 'companion-sans' },
+								color: { isExpression: false, value: colorWhite },
+								halign: { isExpression: false, value: 'center' },
+								valign: { isExpression: false, value: 'center' },
+							},
+						],
+						steps: [
+							{
+								down: [
+									{
+										actionId,
+										options: {
+											ddr: String(ddrNumber),
+											...actionOptions,
+										},
+									},
+								],
+								up: [],
+							},
+						],
+						feedbacks: feedbackId
+							? [
+									{
+										feedbackId,
+										options: {
+											ddr: String(ddrNumber),
+										},
+										styleOverrides: [
+											{
+												elementId: 'background',
+												elementProperty: 'color',
+												override: {
+													isExpression: false,
+													value: colorRed,
+												},
+											},
+										],
+									},
+								]
+							: [],
+					}
+
+					return presetId
+				}
+
 				const createRegressionPreset = ({
 					presetId,
 					name,
@@ -959,6 +1060,77 @@ module.exports = {
 					createOutput2SourcePreset(sourceChoice)
 				)
 				
+				const ddrStructures = DDR_CHOICES.map((ddrChoice) => {
+					const ddrNumber = Number(ddrChoice.id)
+
+					const definitions = [
+						createDdrControlPreset({
+							ddrNumber,
+							presetIdSuffix: 'Play',
+							name: 'Play',
+							buttonText: 'PLAY',
+							actionId: 'ddrPlay',
+							feedbackId: 'ddrPlaying',
+						}),
+						createDdrControlPreset({
+							ddrNumber,
+							presetIdSuffix: 'Stop',
+							name: 'Stop',
+							buttonText: 'STOP',
+							actionId: 'ddrStop',
+							feedbackId: 'ddrStopped',
+						}),
+						createDdrControlPreset({
+							ddrNumber,
+							presetIdSuffix: 'Previous',
+							name: 'Previous Clip',
+							buttonText: 'PREV',
+							actionId: 'ddrPreviousClip',
+						}),
+						createDdrControlPreset({
+							ddrNumber,
+							presetIdSuffix: 'Next',
+							name: 'Next Clip',
+							buttonText: 'NEXT',
+							actionId: 'ddrNextClip',
+						}),
+						createDdrControlPreset({
+							ddrNumber,
+							presetIdSuffix: 'Loop',
+							name: 'Loop Mode',
+							buttonText: 'LOOP',
+							actionId: 'ddrLoopMode',
+							actionOptions: { mode: 'toggle' },
+							feedbackId: 'ddrLoopMode',
+						}),
+						createDdrControlPreset({
+							ddrNumber,
+							presetIdSuffix: 'Single',
+							name: 'Single Mode',
+							buttonText: 'SINGLE',
+							buttonTextSize: 35,
+							actionId: 'ddrSingleMode',
+							actionOptions: { mode: 'toggle' },
+							feedbackId: 'ddrSingleMode',
+						}),
+						createDdrControlPreset({
+							ddrNumber,
+							presetIdSuffix: 'Autoplay',
+							name: 'Autoplay Mode',
+							buttonText: 'AUTOPLAY',
+							actionId: 'ddrAutoplayMode',
+							actionOptions: { mode: 'toggle' },
+							feedbackId: 'ddrAutoplayMode',
+						}),
+					]
+
+					return {
+						id: `ddr${ddrNumber}`,
+						name: `DDR ${ddrNumber}`,
+						definitions,
+					}
+				})
+
 				const liveSafeMe1Definitions = [
 					'me1AInput1',
 					'me1BInput1',
@@ -1338,6 +1510,7 @@ module.exports = {
 							name: 'Output 2',
 							definitions: output2Definitions,
 						},
+						...ddrStructures,
 						{
 							id: 'regression-live-safe',
 							name: 'Regression Testing (Live Safe)',

@@ -36,15 +36,19 @@ A primary goal of the module is reliable **state feedback**, allowing Companion 
 
 Version `1.1.0` is the current stable release.
 
-Version `1.2.0-beta.1` is the current development version.
+Version `1.2.0-beta.2` is the current development version.
 
-Version `1.2.0-beta.1` adds the first new feature development since the 1.1.0 SDK/runtime migration.
+Version `1.2.0-beta.2` extends the 1.2.0 development series with dedicated DDR transport and mode controls, DDR status feedbacks, and beginner-oriented DDR presets.
 
 Current 1.2.0 development includes:
 
 - Beginner-oriented Companion preset library for commonly used Program, Preview, Main DSK, M/E, and Output 2 controls
 - Regression-testing preset groups for live-safe and do-not-use-while-live testing
 - Preset-based checks for variables, tally feedback, and Advanced feedback behavior
+- Dedicated DDR 1 / DDR 2 Play, Stop, Previous Clip, and Next Clip actions
+- DDR Loop, Single, and Autoplay mode controls with On / Off / Toggle behavior
+- DDR Stopped, Loop Mode, Single Mode, and Autoplay Mode feedbacks in addition to the existing Playing feedback
+- Beginner-oriented DDR 1 and DDR 2 preset groups for transport and mode controls
 - New **Advanced: Send Dictionary Shortcut** action for experimental multi-parameter legacy shortcut commands
 - Dictionary shortcut support for 1 through 13 Key/Value pairs
 - Conditional display of only the selected number of Key/Value fields
@@ -68,7 +72,8 @@ The existing version history is:
 - `1.0.0-beta.1.5` fixed numbered-buffer DSK feedback and added macro execution by name.
 - `1.0.0` promoted the hardware-validated Beta 1.5 feature set to the first stable release.
 - `1.1.0` migrated the module to the current Companion module API, Node.js runtime, and development toolchain without changing the validated TriCaster feature set.
-- `1.2.0-beta.1` begins new feature development with the preset library and experimental generic dictionary shortcut action.
+- `1.2.0-beta.1` introduced the preset library and experimental generic dictionary shortcut action.
+- `1.2.0-beta.2` adds dedicated DDR transport and mode controls, expanded DDR feedbacks, and DDR 1 / DDR 2 beginner preset groups.
 
 Current functionality includes:
 
@@ -77,7 +82,7 @@ Current functionality includes:
 - Initial shortcut-state reception
 - Incremental state-change reception
 - Generic parsing of `<shortcut_state>` messages
-- Dedicated actions for commonly used verified TriCaster controls
+- Dedicated actions for commonly used TriCaster controls
 - Dedicated feedbacks for commonly used TriCaster states
 - Companion variables for selected useful `NTK_states`
 - Advanced single-state feedback
@@ -111,9 +116,13 @@ For normal installation, Node.js, npm, Yarn, and other development tools are **n
 
 Download the `.tgz` file attached to the desired GitHub Release.
 
-For version 1.0.0:
+For the current stable release:
 
-`newtek-tricaster-legacy-1.0.0.tgz`
+`newtek-tricaster-legacy-1.1.0.tgz`
+
+Development prerelease packages use the same versioned naming convention, for example:
+
+`newtek-tricaster-legacy-1.2.0-beta.2.tgz`
 
 Install the module package through Bitfocus Companion's module/developer-module installation interface.
 
@@ -230,6 +239,60 @@ Sets the source routed to TriCaster Output 2.
 
 The Output 2 source list includes direct sources as well as M/E 1-8 where supported by the TriCaster.
 
+### DDR: Play
+
+Starts playback on DDR 1 or DDR 2.
+
+Choose the desired DDR.
+
+### DDR: Stop
+
+Stops playback on DDR 1 or DDR 2.
+
+Choose the desired DDR.
+
+### DDR: Previous Clip
+
+Moves the selected DDR playhead to the previous clip.
+
+Choose the desired DDR.
+
+### DDR: Next Clip
+
+Moves the selected DDR playhead to the next clip.
+
+Choose the desired DDR.
+
+### DDR: Loop Mode
+
+Controls Loop mode on DDR 1 or DDR 2.
+
+Choose the desired DDR and select:
+
+- On
+- Off
+- Toggle
+
+### DDR: Single Mode
+
+Controls Single mode on DDR 1 or DDR 2.
+
+Choose the desired DDR and select:
+
+- On
+- Off
+- Toggle
+
+### DDR: Autoplay Mode
+
+Controls Autoplay mode on DDR 1 or DDR 2.
+
+Choose the desired DDR and select:
+
+- On
+- Off
+- Toggle
+
 ### Macro: Run by Name
 
 Runs a TriCaster macro by its exact macro name.
@@ -297,6 +360,45 @@ Command names, accepted values, and available functions may vary between legacy 
 
 Use the dedicated actions when an appropriate dedicated action exists. The Advanced action is intended primarily for development, troubleshooting, command discovery, and functions that do not yet have a dedicated action.
 
+### Advanced: Send Dictionary Shortcut
+
+Provides experimental access to legacy TriCaster shortcut commands that require multiple Key/Value parameters.
+
+The action supports 1 through 13 Key/Value pairs. Only keys within the selected count are considered, and a pair is sent only when both its Name and Value are nonblank.
+
+The current implementation serializes the Key/Value pairs as additional XML attributes on the legacy `<shortcut>` command.
+
+Dictionary shortcut names, keys, values, and value types depend on the specific TriCaster shortcut definition.
+
+**Dictionary shortcut transport has not yet been hardware-validated on the tested XD860 and should be treated as experimental until that validation is completed.**
+
+Use known TriCaster shortcut definitions rather than guessing command names, dictionary keys, or value types.
+
+## Presets
+
+Version `1.2.0-beta.1` introduced the beginner-oriented preset library for commonly used TriCaster controls.
+
+Version `1.2.0-beta.2` expands the preset library with dedicated DDR 1 and DDR 2 transport and mode controls.
+
+Preset groups currently include:
+
+- Program
+- Preview
+- Main Program DSK 1 and DSK 2
+- M/E 1 through M/E 8
+- Output 2
+- DDR 1
+- DDR 2
+
+The presets provide ready-made buttons for common source selections, transitions, DDR transport, and DDR mode controls using the module's dedicated actions and feedbacks.
+
+The module also includes regression-testing preset groups:
+
+- **Regression Testing (Live Safe)**
+- **Regression Testing (DO NOT USE WHILE LIVE)**
+
+These regression groups are intended for module development and hardware testing rather than normal operator use.
+
 ## Feedbacks
 
 The module provides dedicated boolean feedbacks for commonly used TriCaster states.
@@ -361,6 +463,30 @@ Select DDR 1 or DDR 2.
 
 The feedback becomes active when the selected DDR reports that it is playing.
 
+### DDR: Stopped
+
+Select DDR 1 or DDR 2.
+
+The feedback becomes active when the selected DDR reports that it is stopped.
+
+### DDR: Loop Mode
+
+Select DDR 1 or DDR 2.
+
+The feedback becomes active when the selected DDR reports that Loop mode is enabled.
+
+### DDR: Single Mode
+
+Select DDR 1 or DDR 2.
+
+The feedback becomes active when the selected DDR reports that Single mode is enabled.
+
+### DDR: Autoplay Mode
+
+Select DDR 1 or DDR 2.
+
+The feedback becomes active when the selected DDR reports that Autoplay mode is enabled.
+
 ### Tally: Source On Program/Preview
 
 Select:
@@ -375,6 +501,7 @@ The legacy TriCaster may report multiple simultaneously contributing sources in 
 `Input1|Net|BFR5|V5`
 
 The module parses these as individual sources and performs an exact source match.
+
 ### Advanced: Shortcut State Equals
 
 This feedback monitors any individual shortcut state reported by the TriCaster.
@@ -509,11 +636,21 @@ The validated test scope included:
 
 Other legacy TriCaster models and software versions may expose different commands, states, or capabilities and have not yet been fully validated.
 
+## Version 1.2.0-beta.2 Development Validation Status
+
+Version `1.2.0-beta.2` adds dedicated DDR 1 / DDR 2 Play, Stop, Previous Clip, and Next Clip actions; Loop, Single, and Autoplay mode controls; Stopped and mode-state feedbacks; and beginner-oriented DDR preset groups.
+
+The DDR transport and mode shortcut commands used by these actions are based on commands previously exercised on the tested TriCaster XD860 and correlated with the legacy shortcut definitions.
+
+The new beta.2 Companion action, feedback, and preset definitions load successfully in Companion, and the DDR preset groups have been visually checked in Companion.
+
+Hardware validation of the new DDR feedback behavior, particularly the Loop, Single, and Autoplay state feedbacks, remains pending.
+
 ## Known Limitations and Future Development
 
 Areas that may be investigated in future versions include:
 
-- Dedicated DDR/media-player actions based on commands already verified on legacy hardware
+- Additional DDR/media-player controls such as clip selection, preset selection, and playlist management
 - Audio control
 - Graphics and media selection
 - Additional source-choice discovery
@@ -523,7 +660,7 @@ Areas that may be investigated in future versions include:
 - Additional state discovery
 - Recording and streaming states where supported
 - Additional legacy TriCaster model compatibility
-- Reconnection/error-handling improvements if testing shows they are needed
+- Reconnection or command error-handling improvements if testing shows they are needed
 - Additional dedicated actions and feedbacks based on verified legacy commands
 - Generic framebuffer assignment using verified dictionary-style TriCaster commands
 
@@ -548,6 +685,8 @@ Do not include passwords, API credentials, or other sensitive information in log
 
 ## Production Use
 
-Version `1.0.0` has completed hardware validation on the tested TriCaster XD860.
+Version `1.1.0` has completed hardware regression testing on the tested TriCaster XD860 running build `2-6-170817`.
 
-Because legacy TriCaster models and software builds may expose different commands, states, and capabilities, verify required functions on your particular TriCaster and Companion installation before relying on the module for critical production control or status indication.
+Version `1.2.0-beta.2` remains a development release. Its new DDR action, feedback, and preset definitions load successfully in Companion, but hardware validation of the new DDR feedback behavior remains pending.
+
+Because legacy TriCaster models and software builds may expose different states, commands, and capabilities, verify required functions on your particular system before relying on the module for critical production control or status indication.

@@ -45,6 +45,11 @@ const ME_CHOICES = [
 	{ id: '8', label: 'M/E 8' },
 ]
 
+const DDR_CHOICES = [
+	{ id: '1', label: 'DDR 1' },
+	{ id: '2', label: 'DDR 2' },
+]
+
 const ME_SOURCE_CHOICES = [
 	...BASE_SOURCE_CHOICES,
 	{ id: 'framebuffer', label: 'Buffer' },
@@ -89,6 +94,7 @@ module.exports = {
 	BASE_SOURCE_CHOICES,
 	BUFFERS,
 	ME_CHOICES,
+	DDR_CHOICES,
 	ME_SOURCE_CHOICES,
 	PROGRAM_SOURCE_CHOICES,
 	DSK_SOURCE_CHOICES,
