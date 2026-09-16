@@ -36,9 +36,9 @@ A primary goal of the module is reliable **state feedback**, allowing Companion 
 
 Version `1.1.0` is the current stable release.
 
-Version `1.2.0-beta.2` is the current development version.
+Version `1.2.0-beta.3` is the current development version.
 
-Version `1.2.0-beta.2` extends the 1.2.0 development series with dedicated DDR transport and mode controls, DDR status feedbacks, and beginner-oriented DDR presets.
+Version `1.2.0-beta.3` extends the 1.2.0 development series with M/E Mix/Effect mode control and feedback, M/E background CUT/AUTO controls and presets, corrected live reevaluation of the beta.2 DDR feedbacks, and initial Input 1-8 audio mute control and feedback.
 
 Current 1.2.0 development includes:
 
@@ -56,11 +56,9 @@ Current 1.2.0 development includes:
 - Blank or incomplete Key/Value pairs are not sent
 - XML escaping for shortcut names, dictionary key names, and dictionary values
 
-The generic dictionary shortcut action is currently **experimental**.
+The generic dictionary shortcut action remains an advanced development feature.
 
-Its TCP serialization implementation is based on the legacy shortcut XML format and the dictionary structures defined by NewTek, but it has not yet been validated against the tested TriCaster XD860.
-
-Until hardware validation is completed, dictionary shortcut transport should be treated as development functionality rather than production-confirmed behavior.
+Dictionary transport has been hardware-validated on the tested TriCaster XD860 for the `_frmbfr_change` shortcut family using `ShortCutName`, `FrmBfrName`, and `UpdateUI`. Other dictionary shortcut families have not yet been hardware-validated.
 
 The existing version history is:
 
@@ -73,7 +71,8 @@ The existing version history is:
 - `1.0.0` promoted the hardware-validated Beta 1.5 feature set to the first stable release.
 - `1.1.0` migrated the module to the current Companion module API, Node.js runtime, and development toolchain without changing the validated TriCaster feature set.
 - `1.2.0-beta.1` introduced the preset library and experimental generic dictionary shortcut action.
-- `1.2.0-beta.2` adds dedicated DDR transport and mode controls, expanded DDR feedbacks, and DDR 1 / DDR 2 beginner preset groups.
+- `1.2.0-beta.2` added dedicated DDR transport and mode controls, expanded DDR feedbacks, and DDR 1 / DDR 2 beginner preset groups.
+- `1.2.0-beta.3` adds M/E Mix/Effect mode control and feedback, M/E background CUT/AUTO controls and presets, corrected DDR feedback reevaluation, and initial Input 1-8 audio mute control and feedback.
 
 Current functionality includes:
 
@@ -122,7 +121,7 @@ For the current stable release:
 
 Development prerelease packages use the same versioned naming convention, for example:
 
-`newtek-tricaster-legacy-1.2.0-beta.2.tgz`
+`newtek-tricaster-legacy-1.2.0-beta.3.tgz`
 
 Install the module package through Bitfocus Companion's module/developer-module installation interface.
 
@@ -221,13 +220,13 @@ Select:
 
 This sets the source for the selected M/E DSK.
 
-### M/E: AUTO
+### M/E: Set Mode
 
-Performs an AUTO transition on the selected M/E.
+Sets the selected M/E to Mix or Effect mode.
 
-### M/E: TAKE
+### M/E: Background Transition
 
-Performs a TAKE transition on the selected M/E.
+Performs a CUT or AUTO background transition on the selected M/E while it is in Mix mode.
 
 ### Main FX: Set Source
 
@@ -292,6 +291,18 @@ Choose the desired DDR and select:
 - On
 - Off
 - Toggle
+
+### Audio: Mute
+
+Mutes, unmutes, or toggles audio for Input 1 through Input 8.
+
+Choose:
+
+- Input 1-8
+- Left, Right, or Both
+- On, Off, or Toggle
+
+For **Both + Toggle**, if both channels are already muted they are both unmuted. Otherwise, both channels are muted.
 
 ### Macro: Run by Name
 
@@ -380,6 +391,8 @@ Version `1.2.0-beta.1` introduced the beginner-oriented preset library for commo
 
 Version `1.2.0-beta.2` expands the preset library with dedicated DDR 1 and DDR 2 transport and mode controls.
 
+Version `1.2.0-beta.3` expands the preset library with M/E mode and background-transition controls, plus Input 1-8 audio mute presets.
+
 Preset groups currently include:
 
 - Program
@@ -389,6 +402,9 @@ Preset groups currently include:
 - Output 2
 - DDR 1
 - DDR 2
+- M/E Mix/Effect mode control and mode-state feedback
+- M/E background CUT/AUTO controls with Effect-mode preset indication
+- Input 1-8 audio mute control and muted-state feedback for Left, Right, or Both channels
 
 The presets provide ready-made buttons for common source selections, transitions, DDR transport, and DDR mode controls using the module's dedicated actions and feedbacks.
 
@@ -440,6 +456,15 @@ Select:
 
 The feedback becomes active when the selected source is currently selected on that M/E row.
 
+### M/E: Mode Selected
+
+Indicates whether the selected M/E is currently in Mix or Effect mode.
+
+Choose:
+
+- M/E 1-8
+- Mix or Effect
+
 ### M/E DSK: Source Selected
 
 Select:
@@ -486,6 +511,17 @@ The feedback becomes active when the selected DDR reports that Single mode is en
 Select DDR 1 or DDR 2.
 
 The feedback becomes active when the selected DDR reports that Autoplay mode is enabled.
+
+### Audio: Muted
+
+Indicates whether the selected external input audio channel is muted.
+
+Choose:
+
+- Input 1-8
+- Left, Right, or Both
+
+For **Both**, the feedback is active only when both channels are muted.
 
 ### Tally: Source On Program/Preview
 
@@ -636,15 +672,11 @@ The validated test scope included:
 
 Other legacy TriCaster models and software versions may expose different commands, states, or capabilities and have not yet been fully validated.
 
-## Version 1.2.0-beta.2 Development Validation Status
+## Version 1.2.0-beta.3 Development Validation Status
 
-Version `1.2.0-beta.2` adds dedicated DDR 1 / DDR 2 Play, Stop, Previous Clip, and Next Clip actions; Loop, Single, and Autoplay mode controls; Stopped and mode-state feedbacks; and beginner-oriented DDR preset groups.
+Version `1.2.0-beta.3` adds M/E Mix/Effect mode control and feedback, M/E background CUT/AUTO controls and presets, corrected live reevaluation of the beta.2 DDR feedbacks, and initial Input 1-8 audio mute control and feedback.
 
-The DDR transport and mode shortcut commands used by these actions are based on commands previously exercised on the tested TriCaster XD860 and correlated with the legacy shortcut definitions.
-
-The new beta.2 Companion action, feedback, and preset definitions load successfully in Companion, and the DDR preset groups have been visually checked in Companion.
-
-Hardware validation of the new DDR feedback behavior, particularly the Loop, Single, and Autoplay state feedbacks, remains pending.
+The beta.3 action, feedback, and preset definitions load successfully in Companion 5.0.3. Hardware validation of the new M/E controls, corrected DDR live reevaluation, and audio mute behavior remains pending.
 
 ## Known Limitations and Future Development
 
@@ -687,6 +719,6 @@ Do not include passwords, API credentials, or other sensitive information in log
 
 Version `1.1.0` has completed hardware regression testing on the tested TriCaster XD860 running build `2-6-170817`.
 
-Version `1.2.0-beta.2` remains a development release. Its new DDR action, feedback, and preset definitions load successfully in Companion, but hardware validation of the new DDR feedback behavior remains pending.
+Version `1.2.0-beta.3` remains a development release. Its new M/E and audio action, feedback, and preset definitions load successfully in Companion, but hardware validation of the new M/E behavior, corrected DDR live feedback reevaluation, and audio mute behavior remains pending.
 
 Because legacy TriCaster models and software builds may expose different states, commands, and capabilities, verify required functions on your particular system before relying on the module for critical production control or status indication.

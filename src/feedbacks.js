@@ -1,5 +1,6 @@
 const {
 	BASE_SOURCE_CHOICES,
+	AUDIO_INPUT_CHOICES,
 	ME_CHOICES,
 	DDR_CHOICES,
 	ME_SOURCE_CHOICES,
@@ -212,6 +213,43 @@ module.exports = {
 					return normalizeSource(self.shortcutStates[stateName]) === normalizeSource(feedback.options.source)
 				},
 			},
+			meModeSelected: {
+				name: 'M/E: Mode Selected',
+				description: 'Active when the selected M/E is currently in the chosen Mix or Effect mode.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'M/E',
+						id: 'me',
+						choices: ME_CHOICES,
+						default: '1',
+					},
+					{
+						type: 'dropdown',
+						label: 'Mode',
+						id: 'mode',
+						choices: [
+							{ id: 'mix', label: 'Mix' },
+							{ id: 'effect', label: 'Effect' },
+						],
+						default: 'mix',
+					},
+				],
+				callback: (feedback) => {
+					const me = String(feedback.options.me || '1')
+					const stateName = `v${me}_toggle_mix_effect_mode`
+					const value = String(self.shortcutStates[stateName] ?? '').toLowerCase()
+
+					return feedback.options.mode === 'effect'
+						? value === 'true'
+						: value === 'false'
+				},
+			},
 			meDskSourceSelected: {
 				name: 'M/E DSK: Source Selected',
 				description: 'Active when the selected source is currently selected on the chosen M/E DSK.',
@@ -416,6 +454,54 @@ module.exports = {
 						feedback.options.ddr === '2' ? 'ddr2_autoplay_mode_toggle' : 'ddr_autoplay_mode_toggle'
 
 					return String(self.shortcutStates[stateName] ?? '').toLowerCase() === 'true'
+				},
+			},
+			audioMuted: {
+				name: 'Audio: Muted',
+				description: 'Active when the selected external input audio channel is muted.',
+				type: 'boolean',
+				defaultStyle: {
+					bgcolor: 0xff0000,
+					color: 0xffffff,
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Input',
+						id: 'input',
+						choices: AUDIO_INPUT_CHOICES,
+						default: 'Input1',
+					},
+					{
+						type: 'dropdown',
+						label: 'Channel',
+						id: 'channel',
+						choices: [
+							{ id: 'left', label: 'Left' },
+							{ id: 'right', label: 'Right' },
+							{ id: 'both', label: 'Both' },
+						],
+						default: 'both',
+					},
+				],
+				callback: (feedback) => {
+					const input = String(feedback.options.input || 'Input1').toLowerCase()
+					const channel = feedback.options.channel || 'both'
+
+					const leftMuted =
+						String(self.shortcutStates[`${input}_mute`] ?? '').toLowerCase() === 'true'
+					const rightMuted =
+						String(self.shortcutStates[`${input}_mute2`] ?? '').toLowerCase() === 'true'
+
+					if (channel === 'left') {
+						return leftMuted
+					}
+
+					if (channel === 'right') {
+						return rightMuted
+					}
+
+					return leftMuted && rightMuted
 				},
 			},
 			tallySourceOnProgramPreview: {

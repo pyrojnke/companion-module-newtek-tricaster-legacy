@@ -3,6 +3,7 @@ const net = require('net')
 const {
 	BASE_SOURCE_CHOICES,
 	ME_CHOICES,
+	AUDIO_INPUT_CHOICES,
 	DDR_CHOICES,
 	ME_SOURCE_CHOICES,
 	PROGRAM_SOURCE_CHOICES,
@@ -319,6 +320,76 @@ module.exports = {
 					self.sendShortcutCommand(shortcutName, value)
 				},
 			},
+			audioMute: {
+				name: 'Audio: Mute',
+				description: 'Mute, unmute, or toggle the selected external input audio channel.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Input',
+						id: 'input',
+						choices: AUDIO_INPUT_CHOICES,
+						default: 'Input1',
+					},
+					{
+						type: 'dropdown',
+						label: 'Channel',
+						id: 'channel',
+						choices: [
+							{ id: 'left', label: 'Left' },
+							{ id: 'right', label: 'Right' },
+							{ id: 'both', label: 'Both' },
+						],
+						default: 'both',
+					},
+					{
+						type: 'dropdown',
+						label: 'Mute',
+						id: 'mute',
+						choices: [
+							{ id: 'on', label: 'On' },
+							{ id: 'off', label: 'Off' },
+							{ id: 'toggle', label: 'Toggle' },
+						],
+						default: 'toggle',
+					},
+				],
+				callback: async (action) => {
+					const input = String(action.options.input || 'Input1').toLowerCase()
+					const channel = action.options.channel || 'both'
+					const mute = action.options.mute || 'toggle'
+
+					if (channel === 'left' || channel === 'right') {
+						const suffix = channel === 'right' ? 'mute2' : 'mute'
+
+						if (mute === 'toggle') {
+							self.sendShortcutCommand(`${input}_${suffix}_toggle`, '')
+						} else {
+							self.sendShortcutCommand(`${input}_${suffix}`, mute === 'on' ? 'true' : 'false')
+						}
+
+						return
+					}
+
+					let targetMuted
+
+					if (mute === 'toggle') {
+						const leftMuted =
+							String(self.shortcutStates[`${input}_mute`] ?? '').toLowerCase() === 'true'
+						const rightMuted =
+							String(self.shortcutStates[`${input}_mute2`] ?? '').toLowerCase() === 'true'
+
+						targetMuted = !(leftMuted && rightMuted)
+					} else {
+						targetMuted = mute === 'on'
+					}
+
+					const value = targetMuted ? 'true' : 'false'
+
+					self.sendShortcutCommand(`${input}_mute`, value)
+					self.sendShortcutCommand(`${input}_mute2`, value)
+				},
+			},
 			runMacroByName: {
 				name: 'Macro: Run by Name',
 				description: 'Run a TriCaster macro by its exact macro name.',
@@ -509,6 +580,68 @@ module.exports = {
 					const shortcutName = `v${me}_${row}_row_named_input`
 
 					self.sendShortcutCommand(shortcutName, action.options.source)
+				},
+			},
+			setMeMode: {
+				name: 'M/E: Set Mode',
+				description: 'Set the selected M/E to Mix or Effect mode.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'M/E',
+						id: 'me',
+						default: '1',
+						choices: ME_CHOICES,
+					},
+					{
+						type: 'dropdown',
+						label: 'Mode',
+						id: 'mode',
+						default: 'mix',
+						choices: [
+							{ id: 'mix', label: 'Mix' },
+							{ id: 'effect', label: 'Effect' },
+						],
+					},
+				],
+				callback: async (action) => {
+					const me = String(action.options.me)
+					const shortcutName =
+						action.options.mode === 'effect'
+							? `v${me}_select_effect_mode`
+							: `v${me}_select_bkgd_mode`
+
+					self.sendShortcutCommand(shortcutName, '')
+				},
+			},
+			meBackgroundTransition: {
+				name: 'M/E: Background Transition',
+				description: 'Perform a CUT or AUTO background transition on the selected M/E while it is in Mix mode.',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'M/E',
+						id: 'me',
+						default: '1',
+						choices: ME_CHOICES,
+					},
+					{
+						type: 'dropdown',
+						label: 'Transition',
+						id: 'transition',
+						default: 'auto',
+						choices: [
+							{ id: 'auto', label: 'AUTO' },
+							{ id: 'cut', label: 'CUT' },
+						],
+					},
+				],
+				callback: async (action) => {
+					const me = String(action.options.me)
+					const shortcutName =
+						action.options.transition === 'cut' ? `v${me}_take` : `v${me}_auto`
+
+					self.sendShortcutCommand(shortcutName, '')
 				},
 			},
 			meDskTransition: {

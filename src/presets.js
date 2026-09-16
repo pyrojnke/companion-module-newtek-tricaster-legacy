@@ -1,6 +1,7 @@
 const { combineRgb } = require('@companion-module/base')
 const {
 	PROGRAM_SOURCE_CHOICES,
+	AUDIO_INPUT_CHOICES,
 	ME_CHOICES,
 	DDR_CHOICES,
 	ME_SOURCE_CHOICES,
@@ -528,6 +529,210 @@ module.exports = {
 					return presetId
 				}
 
+				const createMeModePreset = (meNumber, mode) => {
+					const modeText = mode === 'effect' ? 'EFFECT' : 'MIX'
+					const presetId = `me${meNumber}${modeText}`
+
+					presets[presetId] = {
+						type: 'layered',
+						name: `M/E${meNumber} - ${modeText}`,
+						canvas: {
+							decoration: { isExpression: false, value: 'none' },
+						},
+						elements: [
+							{
+								type: 'box',
+								id: 'background',
+								x: { isExpression: false, value: 0 },
+								y: { isExpression: false, value: 0 },
+								width: { isExpression: false, value: 100 },
+								height: { isExpression: false, value: 100 },
+								color: { isExpression: false, value: colorBlack },
+							},
+							{
+								type: 'text',
+								id: 'header',
+								name: 'Text',
+								x: { isExpression: false, value: 4 },
+								y: { isExpression: false, value: 4 },
+								width: { isExpression: false, value: 92 },
+								height: { isExpression: false, value: 34 },
+								text: { isExpression: false, value: `M/E${meNumber}` },
+								fontsize: { isExpression: false, value: 38 },
+								fontsizeAllowShrink: { isExpression: false, value: true },
+								font: { isExpression: false, value: 'companion-sans' },
+								color: { isExpression: false, value: colorWhite },
+								halign: { isExpression: false, value: 'center' },
+								valign: { isExpression: false, value: 'top' },
+							},
+							{
+								type: 'text',
+								id: 'mode',
+								name: 'Text2',
+								x: { isExpression: false, value: 2 },
+								y: { isExpression: false, value: 15 },
+								width: { isExpression: false, value: 96 },
+								height: { isExpression: false, value: 83 },
+								text: { isExpression: false, value: modeText },
+								fontsize: {
+									isExpression: false,
+									value: mode === 'effect' ? 33 : 47,
+								},
+								fontsizeAllowShrink: { isExpression: false, value: true },
+								font: { isExpression: false, value: 'companion-sans' },
+								color: { isExpression: false, value: colorWhite },
+								halign: { isExpression: false, value: 'center' },
+								valign: { isExpression: false, value: 'center' },
+							},
+						],
+						steps: [
+							{
+								down: [
+									{
+										actionId: 'setMeMode',
+										options: {
+											me: String(meNumber),
+											mode,
+										},
+									},
+								],
+								up: [],
+							},
+						],
+						feedbacks: [
+							{
+								feedbackId: 'meModeSelected',
+								options: {
+									me: String(meNumber),
+									mode,
+								},
+								styleOverrides: [
+									{
+										elementId: 'background',
+										elementProperty: 'color',
+										override: {
+											isExpression: false,
+											value: colorRed,
+										},
+									},
+								],
+							},
+						],
+					}
+
+					return presetId
+				}
+
+				const createMeBackgroundTransitionPreset = (meNumber, transition) => {
+					const transitionText = transition === 'cut' ? 'CUT' : 'AUTO'
+					const presetId = `me${meNumber}Background${transitionText}`
+
+					presets[presetId] = {
+						type: 'layered',
+						name: `M/E${meNumber} Background - ${transitionText}`,
+						canvas: {
+							decoration: { isExpression: false, value: 'none' },
+						},
+						elements: [
+							{
+								type: 'box',
+								id: 'background',
+								x: { isExpression: false, value: 0 },
+								y: { isExpression: false, value: 0 },
+								width: { isExpression: false, value: 100 },
+								height: { isExpression: false, value: 100 },
+								color: { isExpression: false, value: colorBlack },
+							},
+							{
+								type: 'text',
+								id: 'disabledX',
+								name: 'Effect Mode X',
+								x: { isExpression: false, value: 0 },
+								y: { isExpression: false, value: 0 },
+								width: { isExpression: false, value: 100 },
+								height: { isExpression: false, value: 100 },
+								text: { isExpression: false, value: 'X' },
+								fontsize: { isExpression: false, value: 120 },
+								fontsizeAllowShrink: { isExpression: false, value: false },
+								font: { isExpression: false, value: 'companion-sans' },
+								color: { isExpression: false, value: colorBlack },
+								halign: { isExpression: false, value: 'center' },
+								valign: { isExpression: false, value: 'center' },
+							},
+							{
+								type: 'text',
+								id: 'header',
+								name: 'Text',
+								x: { isExpression: false, value: 4 },
+								y: { isExpression: false, value: 4 },
+								width: { isExpression: false, value: 92 },
+								height: { isExpression: false, value: 34 },
+								text: { isExpression: false, value: `M/E${meNumber}` },
+								fontsize: { isExpression: false, value: 38 },
+								fontsizeAllowShrink: { isExpression: false, value: true },
+								font: { isExpression: false, value: 'companion-sans' },
+								color: { isExpression: false, value: colorWhite },
+								halign: { isExpression: false, value: 'center' },
+								valign: { isExpression: false, value: 'top' },
+							},
+							{
+								type: 'text',
+								id: 'transition',
+								name: 'Text2',
+								x: { isExpression: false, value: 2 },
+								y: { isExpression: false, value: 15 },
+								width: { isExpression: false, value: 96 },
+								height: { isExpression: false, value: 83 },
+								text: { isExpression: false, value: transitionText },
+								fontsize: {
+									isExpression: false,
+									value: transition === 'auto' ? 47 : 120,
+								},
+								fontsizeAllowShrink: { isExpression: false, value: true },
+								font: { isExpression: false, value: 'companion-sans' },
+								color: { isExpression: false, value: colorWhite },
+								halign: { isExpression: false, value: 'center' },
+								valign: { isExpression: false, value: 'center' },
+							},
+						],
+						steps: [
+							{
+								down: [
+									{
+										actionId: 'meBackgroundTransition',
+										options: {
+											me: String(meNumber),
+											transition,
+										},
+									},
+								],
+								up: [],
+							},
+						],
+						feedbacks: [
+							{
+								feedbackId: 'meModeSelected',
+								options: {
+									me: String(meNumber),
+									mode: 'effect',
+								},
+								styleOverrides: [
+									{
+										elementId: 'disabledX',
+										elementProperty: 'color',
+										override: {
+											isExpression: false,
+											value: colorRed,
+										},
+									},
+								],
+							},
+						],
+					}
+
+					return presetId
+				}
+
 				const createMeDskSourcePreset = (meNumber, sourceChoice) => {
 					const headerText = `M/E${meNumber} DSK`
 					const presetId = `me${meNumber}Dsk${String(sourceChoice.id).replace(/[^A-Za-z0-9]/g, '')}`
@@ -913,6 +1118,100 @@ module.exports = {
 					return presetId
 				}
 
+				const createAudioMutePreset = (inputChoice, channel) => {
+					const inputNumber = String(inputChoice.id).replace('Input', '')
+					const channelText =
+						channel === 'left' ? 'LEFT' : channel === 'right' ? 'RIGHT' : 'BOTH'
+					const presetId = `audio${inputChoice.id}${channelText}Mute`
+
+					presets[presetId] = {
+						type: 'layered',
+						name: `${inputChoice.label} - ${channelText} Mute`,
+						canvas: {
+							decoration: { isExpression: false, value: 'none' },
+						},
+						elements: [
+							{
+								type: 'box',
+								id: 'background',
+								x: { isExpression: false, value: 0 },
+								y: { isExpression: false, value: 0 },
+								width: { isExpression: false, value: 100 },
+								height: { isExpression: false, value: 100 },
+								color: { isExpression: false, value: colorBlack },
+							},
+							{
+								type: 'text',
+								id: 'header',
+								name: 'Text',
+								x: { isExpression: false, value: 4 },
+								y: { isExpression: false, value: 4 },
+								width: { isExpression: false, value: 92 },
+								height: { isExpression: false, value: 34 },
+								text: { isExpression: false, value: `INPUT ${inputNumber}` },
+								fontsize: { isExpression: false, value: 38 },
+								fontsizeAllowShrink: { isExpression: false, value: true },
+								font: { isExpression: false, value: 'companion-sans' },
+								color: { isExpression: false, value: colorWhite },
+								halign: { isExpression: false, value: 'center' },
+								valign: { isExpression: false, value: 'top' },
+							},
+							{
+								type: 'text',
+								id: 'control',
+								name: 'Text2',
+								x: { isExpression: false, value: 2 },
+								y: { isExpression: false, value: 15 },
+								width: { isExpression: false, value: 96 },
+								height: { isExpression: false, value: 83 },
+								text: { isExpression: false, value: `${channelText}\nMUTE` },
+								fontsize: { isExpression: false, value: 38 },
+								fontsizeAllowShrink: { isExpression: false, value: true },
+								font: { isExpression: false, value: 'companion-sans' },
+								color: { isExpression: false, value: colorWhite },
+								halign: { isExpression: false, value: 'center' },
+								valign: { isExpression: false, value: 'center' },
+							},
+						],
+						steps: [
+							{
+								down: [
+									{
+										actionId: 'audioMute',
+										options: {
+											input: inputChoice.id,
+											channel,
+											mute: 'toggle',
+										},
+									},
+								],
+								up: [],
+							},
+						],
+						feedbacks: [
+							{
+								feedbackId: 'audioMuted',
+								options: {
+									input: inputChoice.id,
+									channel,
+								},
+								styleOverrides: [
+									{
+										elementId: 'background',
+										elementProperty: 'color',
+										override: {
+											isExpression: false,
+											value: colorRed,
+										},
+									},
+								],
+							},
+						],
+					}
+
+					return presetId
+				}
+
 				const createRegressionPreset = ({
 					presetId,
 					name,
@@ -1022,6 +1321,16 @@ module.exports = {
 						createMeRowSourcePreset(meNumber, 'b', sourceChoice)
 					)
 
+					const modeDefinitions = [
+						createMeModePreset(meNumber, 'mix'),
+						createMeModePreset(meNumber, 'effect'),
+					]
+
+					const backgroundTransitionDefinitions = [
+						createMeBackgroundTransitionPreset(meNumber, 'auto'),
+						createMeBackgroundTransitionPreset(meNumber, 'cut'),
+					]
+
 					const dskDefinitions = [
 						...DSK_SOURCE_CHOICES.map((sourceChoice) =>
 							createMeDskSourcePreset(meNumber, sourceChoice)
@@ -1045,6 +1354,18 @@ module.exports = {
 								type: 'simple',
 								name: 'Row B',
 								presets: rowBDefinitions,
+							},
+							{
+								id: `me${meNumber}-mode`,
+								type: 'simple',
+								name: 'Mode',
+								presets: modeDefinitions,
+							},
+							{
+								id: `me${meNumber}-background-transition`,
+								type: 'simple',
+								name: 'Background Transition',
+								presets: backgroundTransitionDefinitions,
 							},
 							{
 								id: `me${meNumber}-dsk-source`,
@@ -1130,6 +1451,17 @@ module.exports = {
 						definitions,
 					}
 				})
+
+				const audioInputStructures = AUDIO_INPUT_CHOICES.map((inputChoice) => ({
+					id: `audio-${inputChoice.id.toLowerCase()}`,
+					type: 'simple',
+					name: inputChoice.label,
+					presets: [
+						createAudioMutePreset(inputChoice, 'left'),
+						createAudioMutePreset(inputChoice, 'right'),
+						createAudioMutePreset(inputChoice, 'both'),
+					],
+				}))
 
 				const liveSafeMe1Definitions = [
 					'me1AInput1',
@@ -1511,6 +1843,11 @@ module.exports = {
 							definitions: output2Definitions,
 						},
 						...ddrStructures,
+						{
+							id: 'audio',
+							name: 'Audio',
+							definitions: audioInputStructures,
+						},
 						{
 							id: 'regression-live-safe',
 							name: 'Regression Testing (Live Safe)',

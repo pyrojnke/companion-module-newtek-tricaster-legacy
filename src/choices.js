@@ -16,6 +16,10 @@ const BASE_SOURCE_CHOICES = [
 	{ id: 'Black', label: 'BLACK' },
 ]
 
+const AUDIO_INPUT_CHOICES = BASE_SOURCE_CHOICES.filter((choice) =>
+	/^Input[1-8]$/.test(choice.id)
+)
+
 const BUFFERS = [
 	{ id: 'BFR1', label: 'Buffer 1' },
 	{ id: 'BFR2', label: 'Buffer 2' },
@@ -92,6 +96,7 @@ const TALLY_SOURCE_CHOICES = [
 
 module.exports = {
 	BASE_SOURCE_CHOICES,
+	AUDIO_INPUT_CHOICES,
 	BUFFERS,
 	ME_CHOICES,
 	DDR_CHOICES,
