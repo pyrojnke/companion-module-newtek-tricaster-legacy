@@ -4,9 +4,9 @@ A Bitfocus Companion module for older NewTek TriCaster systems that use the lega
 
 > **Stable Release**
 >
-> Version `1.1.0` is the current stable release.
+> Version `1.2.0` is the current stable release.
 
-Version `1.1.0` is a maintenance and compatibility release that modernizes the module SDK, runtime, and development toolchain while preserving the TriCaster control and feedback behavior of version `1.0.0`. No new TriCaster features are introduced in this release.
+Version `1.2.0` adds the hardware-validated 1.2.0 feature set, including the beginner preset library, dictionary shortcut support, expanded DDR controls and feedbacks, M/E Mix/Effect mode and background-transition controls, and Input 1-8 audio mute control and feedback.
 
 The 1.1.0 migration includes:
 
@@ -34,13 +34,11 @@ A primary goal of the module is reliable **state feedback**, allowing Companion 
 
 ## Current Status
 
-Version `1.1.0` is the current stable release.
+Version `1.2.0` is the current stable release.
 
-Version `1.2.0-beta.3` is the current development version.
+Version `1.2.0` adds the hardware-validated 1.2.0 feature set, including the beginner preset library, dictionary shortcut support, expanded DDR controls and feedbacks, M/E Mix/Effect mode and background-transition controls, and Input 1-8 audio mute control and feedback.
 
-Version `1.2.0-beta.3` extends the 1.2.0 development series with M/E Mix/Effect mode control and feedback, M/E background CUT/AUTO controls and presets, corrected live reevaluation of the beta.2 DDR feedbacks, and initial Input 1-8 audio mute control and feedback.
-
-Current 1.2.0 development includes:
+Version 1.2.0 includes:
 
 - Beginner-oriented Companion preset library for commonly used Program, Preview, Main DSK, M/E, and Output 2 controls
 - Regression-testing preset groups for live-safe and do-not-use-while-live testing
@@ -72,7 +70,8 @@ The existing version history is:
 - `1.1.0` migrated the module to the current Companion module API, Node.js runtime, and development toolchain without changing the validated TriCaster feature set.
 - `1.2.0-beta.1` introduced the preset library and experimental generic dictionary shortcut action.
 - `1.2.0-beta.2` added dedicated DDR transport and mode controls, expanded DDR feedbacks, and DDR 1 / DDR 2 beginner preset groups.
-- `1.2.0-beta.3` adds M/E Mix/Effect mode control and feedback, M/E background CUT/AUTO controls and presets, corrected DDR feedback reevaluation, and initial Input 1-8 audio mute control and feedback.
+- `1.2.0-beta.3` added M/E Mix/Effect mode control and feedback, M/E background CUT/AUTO controls and presets, corrected DDR feedback reevaluation, and initial Input 1-8 audio mute control and feedback.
+- `1.2.0` promotes the hardware-validated 1.2.0 feature set to the stable release.
 
 Current functionality includes:
 
@@ -117,11 +116,7 @@ Download the `.tgz` file attached to the desired GitHub Release.
 
 For the current stable release:
 
-`newtek-tricaster-legacy-1.1.0.tgz`
-
-Development prerelease packages use the same versioned naming convention, for example:
-
-`newtek-tricaster-legacy-1.2.0-beta.3.tgz`
+`newtek-tricaster-legacy-1.2.0.tgz`
 
 Install the module package through Bitfocus Companion's module/developer-module installation interface.
 
@@ -209,7 +204,7 @@ Select:
 
 This provides source selection for the A and B rows of the selected M/E.
 
-M/E C and D row support is not currently exposed as a dedicated action.
+Dedicated M/E C and D row controls are not provided for the tested TriCaster XD860 Standard Edition environment. C/D row functionality is associated with TriCaster Advanced Edition systems and has not been validated by this module.
 
 ### M/E DSK: Set Source
 
@@ -392,6 +387,8 @@ Version `1.2.0-beta.1` introduced the beginner-oriented preset library for commo
 Version `1.2.0-beta.2` expands the preset library with dedicated DDR 1 and DDR 2 transport and mode controls.
 
 Version `1.2.0-beta.3` expands the preset library with M/E mode and background-transition controls, plus Input 1-8 audio mute presets.
+
+Version `1.2.0` promotes the hardware-validated preset library to the stable release.
 
 Preset groups currently include:
 
@@ -672,21 +669,33 @@ The validated test scope included:
 
 Other legacy TriCaster models and software versions may expose different commands, states, or capabilities and have not yet been fully validated.
 
-## Version 1.2.0-beta.3 Development Validation Status
+## Version 1.2.0 Hardware Validation Status
 
-Version `1.2.0-beta.3` adds M/E Mix/Effect mode control and feedback, M/E background CUT/AUTO controls and presets, corrected live reevaluation of the beta.2 DDR feedbacks, and initial Input 1-8 audio mute control and feedback.
+Version `1.2.0` completed hardware validation on the tested NewTek TriCaster XD860 running build `2-6-170817` with Bitfocus Companion 5.0.3.
 
-The beta.3 action, feedback, and preset definitions load successfully in Companion 5.0.3. Hardware validation of the new M/E controls, corrected DDR live reevaluation, and audio mute behavior remains pending.
+The validation included:
+
+- Full regression testing of the previously stable module functionality
+- DDR 1 and DDR 2 transport, mode controls, and live feedback reevaluation
+- M/E Mix/Effect mode control and feedback on M/E1 and M/E8
+- M/E background CUT and AUTO control on M/E1 and M/E8
+- Effect-mode indication on M/E background-transition presets
+- Input 1-8 audio mute control and feedback
+- Left, Right, and Both audio mute behavior
+- Synchronized and unsynchronized Both-Toggle behavior
+- TriCaster-linked audio-channel behavior
+
+The generic dictionary shortcut transport has also been hardware-validated for the `_frmbfr_change` shortcut family using `ShortCutName`, `FrmBfrName`, and `UpdateUI`. Other dictionary shortcut families remain advanced, unvalidated functionality.
 
 ## Known Limitations and Future Development
 
 Areas that may be investigated in future versions include:
 
 - Additional DDR/media-player controls such as clip selection, preset selection, and playlist management
-- Audio control
+- Additional audio controls such as level, pan/balance, trim, input type, solo, and other mixer functions
 - Graphics and media selection
 - Additional source-choice discovery
-- M/E C and D row behavior
+- M/E C and D row compatibility on TriCaster systems running Advanced Edition
 - Additional M/E and FX behavior
 - Program transition delegation
 - Additional state discovery
@@ -694,7 +703,7 @@ Areas that may be investigated in future versions include:
 - Additional legacy TriCaster model compatibility
 - Reconnection or command error-handling improvements if testing shows they are needed
 - Additional dedicated actions and feedbacks based on verified legacy commands
-- Generic framebuffer assignment using verified dictionary-style TriCaster commands
+- Dedicated framebuffer selection and feedback using the verified legacy framebuffer commands and states
 
 Features should be added based on behavior verified on legacy TriCaster hardware rather than assuming that commands or states used by newer TriCaster systems behave identically.
 
@@ -719,6 +728,8 @@ Do not include passwords, API credentials, or other sensitive information in log
 
 Version `1.1.0` has completed hardware regression testing on the tested TriCaster XD860 running build `2-6-170817`.
 
-Version `1.2.0-beta.3` remains a development release. Its new M/E and audio action, feedback, and preset definitions load successfully in Companion, but hardware validation of the new M/E behavior, corrected DDR live feedback reevaluation, and audio mute behavior remains pending.
+Version `1.2.0` has completed hardware validation on the tested NewTek TriCaster XD860 running build `2-6-170817` with Bitfocus Companion 5.0.3.
+
+The validated 1.2.0 feature set includes the existing regression-tested controls, DDR transport and mode controls with live feedback, M/E Mix/Effect mode and background-transition controls, Input 1-8 audio mute control and feedback, and the beginner-oriented preset library.
 
 Because legacy TriCaster models and software builds may expose different states, commands, and capabilities, verify required functions on your particular system before relying on the module for critical production control or status indication.
